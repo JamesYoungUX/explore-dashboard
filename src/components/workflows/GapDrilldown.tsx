@@ -46,7 +46,7 @@ export default function GapDrilldown({ gapType, onBack }: Props) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:3001/api/gap-categories/${gapType}`);
+        const response = await fetch(`/api/gap-categories/${gapType}`);
         if (!response.ok) {
           throw new Error('Failed to fetch gap data');
         }

@@ -218,7 +218,7 @@ export default function CareGaps({ onBack }: Props) {
     const fetchSummary = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3001/api/care-gaps/summary');
+        const response = await fetch('/api/care-gaps/summary');
         if (!response.ok) {
           throw new Error('Failed to fetch care gaps summary');
         }

@@ -34,7 +34,7 @@ export default function TopDoctors({ onBack }: Props) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3001/api/top-doctors');
+        const response = await fetch('/api/top-doctors');
         if (!response.ok) {
           throw new Error('Failed to fetch top doctors');
         }

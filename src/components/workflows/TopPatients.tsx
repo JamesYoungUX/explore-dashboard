@@ -30,7 +30,7 @@ export default function TopPatients({ onBack }: Props) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3001/api/top-patients');
+        const response = await fetch('/api/top-patients');
         if (!response.ok) {
           throw new Error('Failed to fetch top patients');
         }
