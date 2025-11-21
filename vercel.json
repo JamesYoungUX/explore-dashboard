@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/care-gaps/type/:gapType",
+      "destination": "/api/care-gaps/type/[gapType]"
+    },
+    {
+      "source": "/api/gap-categories/:slug",
+      "destination": "/api/gap-categories/[slug]"
+    }
+  ]
+}
