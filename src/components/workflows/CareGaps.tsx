@@ -9,14 +9,7 @@ type GapSummary = {
   high_priority_count: number;
 };
 
-// Quality gate bonus at risk - this is the key financial metric
-const TOTAL_QUALITY_BONUS = 350000;
-
-// Panel size for calculating realistic gap counts
-const PANEL_SIZE = 1500;
-
-// Mock data for financial impact and interventions
-const gapTypeData: Record<string, {
+type GapTypeData = {
   revenuePerClosure: number;
   qualityMeasure: string;
   currentRate: number;
@@ -26,183 +19,11 @@ const gapTypeData: Record<string, {
   eligiblePercent: number;
   interventions: string[];
   expectedROI: string;
-}> = {
-  'Annual Wellness Visit': {
-    revenuePerClosure: 175,
-    qualityMeasure: 'AWV Completion Rate',
-    currentRate: 68,
-    targetRate: 85,
-    topPerformerRate: 92,
-    bonusWeight: 15,
-    eligiblePercent: 100,
-    interventions: [
-      'Automated appointment reminders 30/14/7 days before due date',
-      'Standing orders for MA to schedule during any visit',
-      'Dedicated AWV time slots on provider schedules',
-      'Patient portal self-scheduling for AWV'
-    ],
-    expectedROI: 'Closing 17% gap protects $52,500 of quality bonus'
-  },
-  'Diabetic Eye Exam': {
-    revenuePerClosure: 85,
-    qualityMeasure: 'Diabetes Eye Exam Rate',
-    currentRate: 58,
-    targetRate: 75,
-    topPerformerRate: 88,
-    bonusWeight: 12,
-    eligiblePercent: 25,
-    interventions: [
-      'Retinal camera in-office (eliminates referral barrier)',
-      'Auto-schedule eye exam with diabetic visit',
-      'Care coordinator follow-up on referral completion',
-      'Partner with mobile retinal screening service'
-    ],
-    expectedROI: 'Closing 17% gap protects $42,000 of quality bonus'
-  },
-  'HbA1c Test': {
-    revenuePerClosure: 45,
-    qualityMeasure: 'Diabetes HbA1c Control',
-    currentRate: 72,
-    targetRate: 85,
-    topPerformerRate: 91,
-    bonusWeight: 12,
-    eligiblePercent: 25,
-    interventions: [
-      'Point-of-care A1c testing at every diabetic visit',
-      'Standing lab orders with patient self-scheduling',
-      'Pharmacy-based A1c testing partnership',
-      'Text reminders with direct lab scheduling link'
-    ],
-    expectedROI: 'Closing 13% gap protects $42,000 of quality bonus'
-  },
-  'Mammogram': {
-    revenuePerClosure: 125,
-    qualityMeasure: 'Breast Cancer Screening',
-    currentRate: 64,
-    targetRate: 80,
-    topPerformerRate: 87,
-    bonusWeight: 10,
-    eligiblePercent: 35,
-    interventions: [
-      'Mobile mammography unit at practice quarterly',
-      'Care coordinator to schedule and confirm',
-      'Address transportation barriers (ride service)',
-      'Same-day mammogram scheduling at referral'
-    ],
-    expectedROI: 'Closing 16% gap protects $35,000 of quality bonus'
-  },
-  'Colonoscopy': {
-    revenuePerClosure: 350,
-    qualityMeasure: 'Colorectal Cancer Screening',
-    currentRate: 55,
-    targetRate: 75,
-    topPerformerRate: 82,
-    bonusWeight: 10,
-    eligiblePercent: 60,
-    interventions: [
-      'FIT test alternative for colonoscopy-averse patients',
-      'Cologuard home testing option',
-      'Nurse navigator for colonoscopy scheduling',
-      'Address prep concerns with simplified protocols'
-    ],
-    expectedROI: 'Closing 20% gap protects $35,000 of quality bonus'
-  },
-  'Bone Density Scan': {
-    revenuePerClosure: 95,
-    qualityMeasure: 'Osteoporosis Screening',
-    currentRate: 48,
-    targetRate: 70,
-    topPerformerRate: 78,
-    bonusWeight: 5,
-    eligiblePercent: 30,
-    interventions: [
-      'Auto-referral at age 65 or risk factors',
-      'Partner with imaging center for priority scheduling',
-      'Bundle with AWV appointment',
-      'Care gap alert in EHR for eligible patients'
-    ],
-    expectedROI: 'Closing 22% gap protects $17,500 of quality bonus'
-  },
-  'Flu Vaccination': {
-    revenuePerClosure: 35,
-    qualityMeasure: 'Influenza Immunization',
-    currentRate: 62,
-    targetRate: 80,
-    topPerformerRate: 89,
-    bonusWeight: 8,
-    eligiblePercent: 100,
-    interventions: [
-      'Standing orders for MA/RN administration',
-      'Walk-in flu shot clinics (no appointment)',
-      'Pharmacy partnership for overflow',
-      'Text blast campaigns in September-October'
-    ],
-    expectedROI: 'Closing 18% gap protects $28,000 of quality bonus'
-  },
-  'Blood Pressure Check': {
-    revenuePerClosure: 25,
-    qualityMeasure: 'Blood Pressure Control',
-    currentRate: 71,
-    targetRate: 85,
-    topPerformerRate: 90,
-    bonusWeight: 10,
-    eligiblePercent: 45,
-    interventions: [
-      'Home BP monitoring program with device loan',
-      'Nurse visits for BP-only checks',
-      'Pharmacy BP kiosk integration',
-      'Telehealth BP review appointments'
-    ],
-    expectedROI: 'Closing 14% gap protects $35,000 of quality bonus'
-  },
-  'Lipid Panel': {
-    revenuePerClosure: 40,
-    qualityMeasure: 'Statin Therapy Adherence',
-    currentRate: 66,
-    targetRate: 80,
-    topPerformerRate: 86,
-    bonusWeight: 6,
-    eligiblePercent: 35,
-    interventions: [
-      'Standing annual lab orders for chronic patients',
-      'Fasting lab early AM availability',
-      'Home phlebotomy for mobility-limited patients',
-      'Auto-schedule labs 1 month before due'
-    ],
-    expectedROI: 'Closing 14% gap protects $21,000 of quality bonus'
-  },
-  'Cardiac Stress Test': {
-    revenuePerClosure: 450,
-    qualityMeasure: 'CAD Management',
-    currentRate: 52,
-    targetRate: 75,
-    topPerformerRate: 81,
-    bonusWeight: 5,
-    eligiblePercent: 15,
-    interventions: [
-      'In-office stress testing capability',
-      'Cardiology co-management agreement',
-      'Care coordinator for scheduling and prep',
-      'Patient education on test importance'
-    ],
-    expectedROI: 'Closing 23% gap protects $17,500 of quality bonus'
-  },
-  'Pneumonia Vaccine': {
-    revenuePerClosure: 45,
-    qualityMeasure: 'Pneumococcal Vaccination',
-    currentRate: 58,
-    targetRate: 80,
-    topPerformerRate: 88,
-    bonusWeight: 7,
-    eligiblePercent: 50,
-    interventions: [
-      'Standing orders for 65+ patients',
-      'Bundle with flu shot visits',
-      'EHR alert for eligible patients',
-      'Pharmacy administration partnership'
-    ],
-    expectedROI: 'Closing 22% gap protects $24,500 of quality bonus'
-  }
+};
+
+type PracticeConfig = {
+  panel_size: number;
+  total_quality_bonus: number;
 };
 
 interface Props {
@@ -211,19 +32,36 @@ interface Props {
 
 export default function CareGaps({ onBack }: Props) {
   const [summary, setSummary] = useState<GapSummary[]>([]);
+  const [gapTypeData, setGapTypeData] = useState<Record<string, GapTypeData>>({});
+  const [config, setConfig] = useState<PracticeConfig>({ panel_size: 1522, total_quality_bonus: 350000 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchSummary = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/api/care-gaps/summary');
-        if (!response.ok) {
-          throw new Error('Failed to fetch care gaps summary');
+
+        // Fetch all data in parallel
+        const [summaryRes, metricsRes, configRes] = await Promise.all([
+          fetch('/api/care-gaps/summary'),
+          fetch('/api/gap-type-metrics'),
+          fetch('/api/practice-config')
+        ]);
+
+        if (!summaryRes.ok || !metricsRes.ok || !configRes.ok) {
+          throw new Error('Failed to fetch data');
         }
-        const result = await response.json();
-        setSummary(result);
+
+        const [summaryData, metricsData, configData] = await Promise.all([
+          summaryRes.json(),
+          metricsRes.json(),
+          configRes.json()
+        ]);
+
+        setSummary(summaryData);
+        setGapTypeData(metricsData);
+        setConfig(configData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
@@ -231,7 +69,7 @@ export default function CareGaps({ onBack }: Props) {
       }
     };
 
-    fetchSummary();
+    fetchData();
   }, []);
 
   const formatCurrency = (amount: number) => {
@@ -271,7 +109,7 @@ export default function CareGaps({ onBack }: Props) {
   const getRealisticGapCount = (gapType: string) => {
     const data = gapTypeData[gapType];
     if (!data) return 0;
-    const eligiblePatients = Math.round(PANEL_SIZE * data.eligiblePercent / 100);
+    const eligiblePatients = Math.round(config.panel_size * data.eligiblePercent / 100);
     const gapRate = (100 - data.currentRate) / 100;
     return Math.round(eligiblePatients * gapRate);
   };
@@ -282,7 +120,7 @@ export default function CareGaps({ onBack }: Props) {
   const totalBonusAtRisk = summary.reduce((sum, s) => {
     const data = gapTypeData[s.gap_type];
     if (data && data.currentRate < data.targetRate) {
-      return sum + (TOTAL_QUALITY_BONUS * data.bonusWeight / 100);
+      return sum + (config.total_quality_bonus * data.bonusWeight / 100);
     }
     return sum;
   }, 0);
@@ -327,8 +165,8 @@ export default function CareGaps({ onBack }: Props) {
               <AlertCircle className="w-6 h-6 text-white" strokeWidth={2} />
             </div>
             <div>
-              <div className="text-2xl font-light text-red-900">{Math.round((totalBonusAtRisk / TOTAL_QUALITY_BONUS) * 100)}% of Quality Bonus at Risk</div>
-              <div className="text-sm text-red-700 font-light mt-1">{PANEL_SIZE} attributed lives • {summary.length} measures below target</div>
+              <div className="text-2xl font-light text-red-900">{Math.round((totalBonusAtRisk / config.total_quality_bonus) * 100)}% of Quality Bonus at Risk</div>
+              <div className="text-sm text-red-700 font-light mt-1">{config.panel_size} attributed lives • {summary.length} measures below target</div>
             </div>
           </div>
           <div className="text-right">
@@ -349,8 +187,8 @@ export default function CareGaps({ onBack }: Props) {
           </div>
           <div>
             <div className="text-xs text-red-700 font-light mb-1">Total Bonus</div>
-            <div className="text-2xl font-light text-red-900">{formatCurrency(TOTAL_QUALITY_BONUS)}</div>
-            <div className="text-xs text-red-600">{Math.round((totalBonusAtRisk / TOTAL_QUALITY_BONUS) * 100)}% at risk</div>
+            <div className="text-2xl font-light text-red-900">{formatCurrency(config.total_quality_bonus)}</div>
+            <div className="text-xs text-red-600">{Math.round((totalBonusAtRisk / config.total_quality_bonus) * 100)}% at risk</div>
           </div>
         </div>
       </div>
@@ -406,7 +244,7 @@ export default function CareGaps({ onBack }: Props) {
               const data = gapTypeData[gap.gap_type];
               if (!data) return null;
 
-              const bonusAtRisk = TOTAL_QUALITY_BONUS * data.bonusWeight / 100;
+              const bonusAtRisk = config.total_quality_bonus * data.bonusWeight / 100;
               const isBelowTarget = data.currentRate < data.targetRate;
               const gapToClose = data.targetRate - data.currentRate;
               const realisticCount = getRealisticGapCount(gap.gap_type);

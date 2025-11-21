@@ -139,7 +139,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                 </div>
                 <div className="pl-8 pt-2 border-t border-red-200 space-y-1.5">
                   <div className="text-sm font-medium text-red-800 mb-2">⭐ Stellar suggests:</div>
-                  <div className="text-sm text-red-700">• Launch intensive outreach for 2,400 patients overdue for colorectal screening</div>
+                  <div className="text-sm text-red-700">• Launch intensive outreach for 411 patients overdue for colorectal screening</div>
                   <div className="text-sm text-red-700">• Deploy diabetes care managers to high-risk panel</div>
                   <div className="text-sm text-red-700">• Implement point-of-care quality measure alerts in EMR</div>
                 </div>
