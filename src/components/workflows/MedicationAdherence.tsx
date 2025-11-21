@@ -117,7 +117,6 @@ export default function MedicationAdherence({ onBack }: Props) {
   });
 
   const gapToTarget = TARGET_ADHERENCE - CURRENT_ADHERENCE;
-  const percentBelow = Math.round((gapToTarget / TARGET_ADHERENCE) * 100);
 
   return (
     <div className="space-y-6">

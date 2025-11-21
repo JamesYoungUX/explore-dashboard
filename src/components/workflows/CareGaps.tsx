@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Target, AlertCircle, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Target, AlertCircle } from 'lucide-react';
 
 type GapSummary = {
   gap_type: string;
@@ -302,8 +302,6 @@ export default function CareGaps({ onBack }: Props) {
     const data = gapTypeData[s.gap_type];
     return sum + ((data?.targetRate || 80) * (data?.bonusWeight || 5));
   }, 0) / totalWeight;
-
-  const gapPercent = Math.round(avgTargetRate - avgCurrentRate);
 
   return (
     <div className="space-y-6">
