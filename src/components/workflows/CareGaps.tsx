@@ -220,7 +220,7 @@ export default function CareGaps({ onBack }: Props) {
                     <div className="flex items-center gap-4 text-sm text-gray-500">
                       <span>{gap.gap_type}</span>
                       <span>•</span>
-                      <span>{getRealisticGapCount(gap.gap_type)} patients</span>
+                      <a href="#" className="text-blue-600 hover:text-blue-800 hover:underline">{getRealisticGapCount(gap.gap_type)} patients</a>
                     </div>
                   </div>
                 </div>
