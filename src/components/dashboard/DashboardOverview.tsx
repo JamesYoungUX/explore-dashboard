@@ -410,13 +410,13 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                   action: 'Launch extended-hours urgent care',
                   color: 'amber'
                 },
-                { 
-                  id: 'network-leakage', 
-                  label: 'Network Leakage - Specialty Care', 
-                  desc: '14% out-of-network • 1,245 OON visits', 
-                  impact: '$95K higher costs', 
+                {
+                  id: 'network-leakage',
+                  label: 'Network Leakage - Specialty Care',
+                  desc: '14% out-of-network • 1,245 OON visits',
+                  impact: '$95K higher costs',
                   action: 'Contract additional specialists',
-                  color: 'blue' 
+                  color: 'green'
                 },
               ]
               .filter(problem => !showHighPriorityOnly || problem.color === 'red')

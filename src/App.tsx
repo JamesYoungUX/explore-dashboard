@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DashboardOverview from './components/dashboard/DashboardOverview';
 import HighCostPatients from './components/workflows/HighCostPatients';
 import PreventableReadmissions from './components/workflows/PreventableReadmissions';
@@ -15,6 +15,10 @@ import type { ProblemArea } from './types';
 
 function App() {
   const [activeView, setActiveView] = useState<ProblemArea | 'overview'>('overview');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeView]);
 
   const renderView = () => {
     switch (activeView) {
