@@ -370,37 +370,45 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                   action: 'Deploy transitional care program',
                   color: 'red' 
                 },
-                { 
-                  id: 'quality-performance', 
-                  label: 'Quality Performance Score Gap', 
-                  desc: '8 points below 30th percentile • 4,892 patients with gaps', 
-                  impact: '$350K bonus at risk', 
+                {
+                  id: 'quality-performance',
+                  label: 'Quality Performance Score Gap',
+                  desc: '8 points below 30th percentile • 4,892 patients with gaps',
+                  impact: '$350K bonus at risk',
                   action: 'Launch intensive outreach campaign',
-                  color: 'red' 
+                  color: 'red'
                 },
-                { 
-                  id: 'readmissions', 
-                  label: 'All-Cause Hospital Readmissions', 
-                  desc: '12% above benchmark • 89 readmissions (30 days)', 
-                  impact: '$185K excess costs', 
-                  action: 'Implement post-discharge protocol',
-                  color: 'amber' 
-                },
-                { 
-                  id: 'ed-utilization', 
-                  label: 'Preventable ED Utilization', 
-                  desc: '18% above target • 2,847 high-risk patients', 
-                  impact: '$250K avoidable', 
-                  action: 'Launch extended-hours urgent care',
-                  color: 'amber' 
-                },
-                { 
-                  id: 'attribution', 
-                  label: 'Primary Care Attribution Decline', 
-                  desc: '91 patients left network • 6% decrease YoY', 
-                  impact: '$127K revenue impact', 
+                {
+                  id: 'attribution',
+                  label: 'Primary Care Attribution Decline',
+                  desc: '91 patients left network • 6% decrease YoY',
+                  impact: '$127K revenue impact',
                   action: 'Reduce wait times & recruit PCPs',
-                  color: 'amber' 
+                  color: 'amber'
+                },
+                {
+                  id: 'readmissions',
+                  label: 'All-Cause Hospital Readmissions',
+                  desc: '12% above benchmark • 89 readmissions (30 days)',
+                  impact: '$185K excess costs',
+                  action: 'Implement post-discharge protocol',
+                  color: 'amber'
+                },
+                {
+                  id: 'high-cost-patients',
+                  label: 'High-Cost Patient Management',
+                  desc: '47 patients • 10% above target PMPM',
+                  impact: '$280K excess costs',
+                  action: 'Deploy care coordination program',
+                  color: 'amber'
+                },
+                {
+                  id: 'ed-utilization',
+                  label: 'Preventable ED Utilization',
+                  desc: '18% above target • 2,847 high-risk patients',
+                  impact: '$250K avoidable',
+                  action: 'Launch extended-hours urgent care',
+                  color: 'amber'
                 },
                 { 
                   id: 'network-leakage', 

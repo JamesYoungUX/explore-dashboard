@@ -165,7 +165,7 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
             <div className="text-xs text-red-600">+2.2% increase</div>
           </div>
           <div>
-            <div className="text-xs text-red-700 font-light mb-1">Well Performing</div>
+            <div className="text-xs text-red-700 font-light mb-1">Efficiently Managed</div>
             <div className="text-2xl font-light text-red-900">$950</div>
             <div className="text-xs text-red-600">-$92 gap</div>
           </div>

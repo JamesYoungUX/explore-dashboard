@@ -10,6 +10,7 @@ import SharedSavings from './components/workflows/SharedSavings';
 import TopDoctors from './components/workflows/TopDoctors';
 import TopPatients from './components/workflows/TopPatients';
 import GapDrilldown from './components/workflows/GapDrilldown';
+import AttributionDecline from './components/workflows/AttributionDecline';
 import type { ProblemArea } from './types';
 
 function App() {
@@ -35,7 +36,7 @@ function App() {
       case 'network-leakage':
         return <ReferralLeakage onBack={() => setActiveView('overview')} />;
       case 'attribution':
-        return <HighCostPatients onBack={() => setActiveView('overview')} />;
+        return <AttributionDecline onBack={() => setActiveView('overview')} />;
       case 'top-doctors':
         return <TopDoctors onBack={() => setActiveView('shared-savings')} />;
       case 'top-patients':
