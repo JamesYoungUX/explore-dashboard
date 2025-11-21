@@ -44,9 +44,9 @@ export default function CareGaps({ onBack }: Props) {
 
         // Fetch all data in parallel
         const [summaryRes, metricsRes, configRes] = await Promise.all([
-          fetch('/api/care-gaps/summary'),
-          fetch('/api/gap-type-metrics'),
-          fetch('/api/practice-config')
+          fetch('/api/care-gaps?summary=true'),
+          fetch('/api/config?type=gap-metrics'),
+          fetch('/api/config?type=practice')
         ]);
 
         if (!summaryRes.ok || !metricsRes.ok || !configRes.ok) {
