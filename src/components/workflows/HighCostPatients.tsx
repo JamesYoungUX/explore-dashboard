@@ -172,9 +172,9 @@ export default function HighCostPatients({ onBack }: Props) {
         </div>
       </div>
 
-      {/* Priority Actions */}
+      {/* Stellar Suggestions */}
       <div className="bg-white/60 backdrop-blur rounded-2xl p-8 shadow-sm">
-        <h2 className="text-2xl font-light mb-6">Priority Actions</h2>
+        <h2 className="text-2xl font-light mb-6">Stellar Suggestions</h2>
 
         <div className="space-y-4">
           {categories

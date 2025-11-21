@@ -174,7 +174,7 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
 
       {/* Action Plan - Moved Up */}
       <div className="bg-white/60 backdrop-blur rounded-2xl p-8 shadow-sm">
-        <h2 className="text-2xl font-light mb-6">⭐ Stellar Suggests: Priority Actions</h2>
+        <h2 className="text-2xl font-light mb-6">Stellar Suggestions</h2>
         
         <div className="space-y-4">
           <div className="flex items-start gap-4 p-4 bg-white rounded-lg border border-gray-200">
