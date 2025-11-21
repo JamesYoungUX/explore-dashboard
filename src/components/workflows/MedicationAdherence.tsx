@@ -164,7 +164,7 @@ export default function MedicationAdherence({ onBack }: Props) {
             <div className="text-xs text-red-600">+{gapToTarget}% gap</div>
           </div>
           <div>
-            <div className="text-xs text-red-700 font-light mb-1">Top Performer</div>
+            <div className="text-xs text-red-700 font-light mb-1">Efficiently Managed</div>
             <div className="text-2xl font-light text-red-900">{TOP_PERFORMER_ADHERENCE}%</div>
             <div className="text-xs text-red-600">+{TOP_PERFORMER_ADHERENCE - CURRENT_ADHERENCE}% gap</div>
           </div>

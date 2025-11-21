@@ -275,7 +275,7 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
                   <div className="text-sm font-medium">{item.lastYear}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-500 mb-1">Well Run</div>
+                  <div className="text-xs text-gray-500 mb-1">Efficiently Managed</div>
                   <div className="text-sm font-medium">{item.topPerformer}</div>
                 </div>
               </div>

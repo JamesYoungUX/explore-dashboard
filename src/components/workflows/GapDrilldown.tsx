@@ -146,7 +146,7 @@ export default function GapDrilldown({ gapType, onBack }: Props) {
                     <div className="font-medium">{formatCurrency(Number(doctor.benchmark_avg))}</div>
                   </div>
                   <div className="bg-white/80 rounded p-3">
-                    <div className="text-gray-500">Top Performer</div>
+                    <div className="text-gray-500">Efficiently Managed</div>
                     <div className="font-medium text-green-600">{formatCurrency(Number(doctor.top_performer_avg))}</div>
                   </div>
                   <div className="bg-white/80 rounded p-3">

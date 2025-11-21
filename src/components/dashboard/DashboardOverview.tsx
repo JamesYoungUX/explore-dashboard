@@ -168,7 +168,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
           {/* Benchmark Comparison */}
           <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-light">Performance vs Top Performers</h3>
+              <h3 className="text-lg font-light">Performance vs Efficiently Managed</h3>
               <span className="text-xs text-gray-500 font-light">National benchmarks</span>
             </div>
             <div className="grid grid-cols-4 gap-6">
@@ -178,7 +178,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                   <span className="text-2xl font-light">$1,042</span>
                   <span className="text-sm text-red-600">+4.2%</span>
                 </div>
-                <div className="text-xs text-gray-500">Well Run: $950</div>
+                <div className="text-xs text-gray-500">Efficiently Managed: $950</div>
               </div>
               <div>
                 <div className="text-xs text-gray-500 font-light mb-2">Readmission Rate</div>
@@ -186,7 +186,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                   <span className="text-2xl font-light">8.2%</span>
                   <span className="text-sm text-red-600">+1.7%</span>
                 </div>
-                <div className="text-xs text-gray-500">Well Run: 6.5%</div>
+                <div className="text-xs text-gray-500">Efficiently Managed: 6.5%</div>
               </div>
               <div>
                 <div className="text-xs text-gray-500 font-light mb-2">ED Visits per 1000</div>
@@ -194,7 +194,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                   <span className="text-2xl font-light">520</span>
                   <span className="text-sm text-red-600">+18%</span>
                 </div>
-                <div className="text-xs text-gray-500">Well Run: 440</div>
+                <div className="text-xs text-gray-500">Efficiently Managed: 440</div>
               </div>
               <div>
                 <div className="text-xs text-gray-500 font-light mb-2">Quality Score</div>
@@ -202,7 +202,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                   <span className="text-2xl font-light">87%</span>
                   <span className="text-sm text-red-600">-3%</span>
                 </div>
-                <div className="text-xs text-gray-500">Well Run: 90%</div>
+                <div className="text-xs text-gray-500">Efficiently Managed: 90%</div>
               </div>
             </div>
           </div>

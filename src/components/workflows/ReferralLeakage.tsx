@@ -165,7 +165,7 @@ export default function ReferralLeakage({ onBack }: Props) {
             <div className="text-xs text-green-600">{gapToTarget.toFixed(1)}% better</div>
           </div>
           <div>
-            <div className="text-xs text-green-700 font-light mb-1">Top Performer</div>
+            <div className="text-xs text-green-700 font-light mb-1">Efficiently Managed</div>
             <div className="text-2xl font-light text-green-900">{TOP_PERFORMER_RATE}%</div>
             <div className="text-xs text-green-600">{(TOP_PERFORMER_RATE - CURRENT_OON_RATE).toFixed(1)}% better</div>
           </div>

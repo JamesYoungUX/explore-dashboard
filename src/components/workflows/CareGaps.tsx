@@ -430,7 +430,10 @@ export default function CareGaps({ onBack }: Props) {
                           {data.bonusWeight}% of bonus
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600">{realisticCount} patients • {isBelowTarget ? `${gapToClose}% below target` : 'Target met'}</p>
+                      <p className="text-sm text-gray-600">
+                        <a href="#" className="text-blue-600 hover:text-blue-800 hover:underline">{realisticCount} patients</a>
+                        {' • '}{isBelowTarget ? `${gapToClose}% below target` : 'Target met'}
+                      </p>
                     </div>
 
                     <div className="text-right">
@@ -452,14 +455,14 @@ export default function CareGaps({ onBack }: Props) {
                       <div className="text-sm font-medium">{data.targetRate}%</div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-500 mb-1">Top Performer</div>
+                      <div className="text-xs text-gray-500 mb-1">Efficiently Managed</div>
                       <div className="text-sm font-medium">{data.topPerformerRate}%</div>
                     </div>
                   </div>
 
-                  {/* Interventions */}
+                  {/* Stellar suggestions */}
                   <div className="pt-4 border-t border-gray-200">
-                    <div className="text-sm font-medium text-gray-700 mb-2">Interventions:</div>
+                    <div className="text-sm font-medium text-gray-700 mb-2">Stellar suggestions:</div>
                     <div className="space-y-1">
                       {data.interventions.map((intervention, idx) => (
                         <div key={idx} className="text-sm text-gray-600">• {intervention}</div>

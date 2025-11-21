@@ -166,7 +166,7 @@ export default function EDOverutilization({ onBack }: Props) {
             <div className="text-xs text-amber-600">+{gapToTarget} gap</div>
           </div>
           <div>
-            <div className="text-xs text-amber-700 font-light mb-1">Top Performer</div>
+            <div className="text-xs text-amber-700 font-light mb-1">Efficiently Managed</div>
             <div className="text-2xl font-light text-amber-900">{TOP_PERFORMER_RATE}</div>
             <div className="text-xs text-amber-600">+{CURRENT_ED_RATE - TOP_PERFORMER_RATE} gap</div>
           </div>

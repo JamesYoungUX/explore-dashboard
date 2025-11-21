@@ -147,7 +147,7 @@ export default function TopDoctors({ onBack }: Props) {
                         <div className="font-medium">{formatCurrency(Number(doctor.benchmarkAvg))}</div>
                       </div>
                       <div className="bg-white/80 rounded p-3">
-                        <div className="text-gray-500">Top Performer</div>
+                        <div className="text-gray-500">Efficiently Managed</div>
                         <div className="font-medium text-green-600">{formatCurrency(Number(doctor.topPerformerAvg))}</div>
                       </div>
                       <div className="bg-white/80 rounded p-3">
