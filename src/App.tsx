@@ -11,6 +11,7 @@ import TopDoctors from './components/workflows/TopDoctors';
 import TopPatients from './components/workflows/TopPatients';
 import GapDrilldown from './components/workflows/GapDrilldown';
 import AttributionDecline from './components/workflows/AttributionDecline';
+import ChosenInitiatives from './components/workflows/ChosenInitiatives';
 import type { ProblemArea } from './types';
 
 function App() {
@@ -52,6 +53,8 @@ function App() {
       case 'gap-post-acute':
       case 'gap-inpatient-medical':
         return <GapDrilldown gapType={activeView} onBack={() => setActiveView('shared-savings')} />;
+      case 'chosen-initiatives':
+        return <ChosenInitiatives onBack={() => setActiveView('overview')} />;
       default:
         return <DashboardOverview onSelectArea={setActiveView} />;
     }
@@ -63,7 +66,20 @@ function App() {
         <div className="bg-[#111111] text-white px-8 py-6 rounded-2xl mb-8 flex items-center justify-between">
           <div className="text-4xl font-light"><span className="font-bold text-[#FFD85F]">Stellar</span>Metrics</div>
           <div className="flex gap-4 text-lg">
-            <button className="px-6 py-3 bg-[#FFD85F] text-black rounded-lg font-medium">Dashboard</button>
+            <button
+              onClick={() => setActiveView('overview')}
+              className={`px-6 py-3 rounded-lg font-medium ${activeView === 'overview' ? 'bg-[#FFD85F] text-black' : 'hover:bg-white/10'
+                }`}
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => setActiveView('chosen-initiatives')}
+              className={`px-6 py-3 rounded-lg font-medium ${activeView === 'chosen-initiatives' ? 'bg-[#FFD85F] text-black' : 'hover:bg-white/10'
+                }`}
+            >
+              Initiatives
+            </button>
             <button className="px-6 py-3 hover:bg-white/10 rounded-lg">Reports</button>
             <button className="px-6 py-3 hover:bg-white/10 rounded-lg">Settings</button>
           </div>

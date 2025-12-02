@@ -1,8 +1,18 @@
-import { neon } from '@neondatabase/serverless';
+import { getDb } from './_lib/db.js';
+import { handleCors } from './_lib/cors.js';
+import { handleError, notFound } from './_lib/errors.js';
 
 export default async function handler(req, res) {
+  // Handle CORS
+  if (handleCors(req, res)) return;
+
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = getDb();
     const { slug } = req.query;
 
     // GET /api/gap-categories?slug=xyz - Get specific category with doctors/patients
@@ -12,7 +22,7 @@ export default async function handler(req, res) {
       `;
 
       if (!category) {
-        return res.status(404).json({ error: 'Gap category not found' });
+        return notFound(res, 'Gap category');
       }
 
       const topDoctors = await sql`
@@ -45,7 +55,7 @@ export default async function handler(req, res) {
         ORDER BY gtp.rank ASC
       `;
 
-      return res.json({
+      return res.status(200).json({
         ...category,
         topDoctors,
         topPatients
@@ -57,9 +67,8 @@ export default async function handler(req, res) {
       SELECT * FROM gap_categories
       ORDER BY amount DESC
     `;
-    res.json(categories);
+    res.status(200).json(categories);
   } catch (error) {
-    console.error('Error fetching gap categories:', error);
-    res.status(500).json({ error: 'Failed to fetch gap categories' });
+    return handleError(res, error, 'fetch gap categories');
   }
 }

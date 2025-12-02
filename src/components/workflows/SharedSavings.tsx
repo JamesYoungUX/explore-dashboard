@@ -130,8 +130,8 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
           <ArrowLeft className="w-6 h-6" />
         </button>
         <div>
-          <h1 className="text-4xl font-light">Shared Savings Target Shortfall</h1>
-          <p className="text-gray-600 mt-2">$420K gap to close • Performance year ends Q1</p>
+          <h1 className="text-4xl font-light">Above-Benchmark Spending</h1>
+          <p className="text-gray-600 mt-2">$420K overspend • Performance year ends Q1</p>
         </div>
       </div>
 
@@ -143,13 +143,13 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
               <AlertCircle className="w-6 h-6 text-white" strokeWidth={2} />
             </div>
             <div>
-              <div className="text-2xl font-light text-red-900">22% Below Target</div>
-              <div className="text-sm text-red-700 font-light mt-1">1,522 attributed lives • Target PMPM: $950 • Actual: $1,042</div>
+              <div className="text-2xl font-light text-red-900">22% Above Benchmark</div>
+              <div className="text-sm text-red-700 font-light mt-1">1,522 attributed lives • Efficient benchmark: $950 • Actual: $1,042</div>
             </div>
           </div>
           <div className="text-right">
             <div className="text-4xl font-light text-red-600">$420K</div>
-            <div className="text-sm text-red-700 font-light">Gap to Close</div>
+            <div className="text-sm text-red-700 font-light">Overspend</div>
           </div>
         </div>
         
@@ -174,7 +174,7 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
 
       {/* Action Plan - Moved Up */}
       <div className="bg-white/60 backdrop-blur rounded-2xl p-8 shadow-sm">
-        <h2 className="text-2xl font-light mb-6">Stellar Suggestions</h2>
+        <h2 className="text-2xl font-light mb-6">Recommendations</h2>
         
         <div className="space-y-4">
           <div className="flex items-start gap-4 p-4 bg-white rounded-lg border border-gray-200">
@@ -184,10 +184,18 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
             <div className="flex-1">
               <h3 className="font-medium mb-1">Implement preferred DME supplier network with negotiated rates</h3>
               <p className="text-sm text-gray-600 mb-2">Target $84K reduction in DME and supplies spending</p>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <span>Owner: Network Contracting</span>
-                <span>•</span>
-                <span>Timeline: 30 days</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <span>Owner: Network Contracting</span>
+                  <span>•</span>
+                  <span>Timeline: 30 days</span>
+                </div>
+                <button
+                  onClick={() => alert('This would link to a Stellar patient/action list for prior authorization implementation')}
+                  className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition-colors"
+                >
+                  → Stellar Actions (89)
+                </button>
               </div>
             </div>
           </div>
@@ -199,10 +207,26 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
             <div className="flex-1">
               <h3 className="font-medium mb-1">Implement step therapy protocols for specialty biologics</h3>
               <p className="text-sm text-gray-600 mb-2">Target $74K reduction in specialty drug spending</p>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <span>Owner: Pharmacy Management</span>
-                <span>•</span>
-                <span>Timeline: 45 days</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 text-sm text-gray-500">
+                  <span>Owner: Pharmacy Management</span>
+                  <span>•</span>
+                  <span>Timeline: 45 days</span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => alert('This would show 156 high-cost specialty drug patients')}
+                    className="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-full hover:bg-green-200 transition-colors"
+                  >
+                    → Patients (156)
+                  </button>
+                  <button
+                    onClick={() => alert('This would show 23 workflow actions for pharmacy optimization')}
+                    className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition-colors"
+                  >
+                    → Actions (23)
+                  </button>
+                </div>
               </div>
             </div>
           </div>

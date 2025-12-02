@@ -88,4 +88,5 @@ export type ProblemArea =
   | 'gap-outpatient-surgery'
   | 'gap-inpatient-surgery'
   | 'gap-post-acute'
-  | 'gap-inpatient-medical';
+  | 'gap-inpatient-medical'
+  | 'chosen-initiatives';

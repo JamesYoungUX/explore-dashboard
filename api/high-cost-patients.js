@@ -1,11 +1,20 @@
-import { neon } from '@neondatabase/serverless';
+import { getDb } from './_lib/db.js';
+import { handleCors } from './_lib/cors.js';
+import { handleError } from './_lib/errors.js';
 
 export default async function handler(req, res) {
-  try {
-    const sql = neon(process.env.DATABASE_URL);
+  // Handle CORS
+  if (handleCors(req, res)) return;
 
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const sql = getDb();
     const patients = await sql`
-      SELECT
+      SELECT 
         hcp.*,
         p.name,
         p.mrn,
@@ -15,9 +24,8 @@ export default async function handler(req, res) {
       ORDER BY hcp.total_cost DESC
     `;
 
-    res.json(patients);
+    res.status(200).json(patients);
   } catch (error) {
-    console.error('Error fetching high cost patients:', error);
-    res.status(500).json({ error: 'Failed to fetch high cost patients' });
+    return handleError(res, error, 'fetch high cost patients');
   }
 }

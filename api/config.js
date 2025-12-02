@@ -1,8 +1,18 @@
-import { neon } from '@neondatabase/serverless';
+import { getDb } from './_lib/db.js';
+import { handleCors } from './_lib/cors.js';
+import { handleError } from './_lib/errors.js';
 
 export default async function handler(req, res) {
+  // Handle CORS
+  if (handleCors(req, res)) return;
+
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = getDb();
     const { type } = req.query;
 
     // GET /api/config?type=practice - Practice config
@@ -12,7 +22,7 @@ export default async function handler(req, res) {
         FROM practice_config
         LIMIT 1
       `;
-      return res.json(config || { panel_size: 1522, total_quality_bonus: 350000 });
+      return res.status(200).json(config || { panel_size: 1522, total_quality_bonus: 350000 });
     }
 
     // GET /api/config?type=gap-metrics - Gap type metrics
@@ -47,7 +57,7 @@ export default async function handler(req, res) {
           interventions: m.interventions.map(i => i.text)
         };
       }
-      return res.json(result);
+      return res.status(200).json(result);
     }
 
     // GET /api/config?type=suggestions - Dashboard suggestions
@@ -66,7 +76,7 @@ export default async function handler(req, res) {
         acc[s.category].push(s.suggestion_text);
         return acc;
       }, {});
-      return res.json(grouped);
+      return res.status(200).json(grouped);
     }
 
     // GET /api/config - Return all config
@@ -74,11 +84,10 @@ export default async function handler(req, res) {
       SELECT panel_size, total_quality_bonus FROM practice_config LIMIT 1
     `;
 
-    res.json({
+    res.status(200).json({
       practice: practiceConfig || { panel_size: 1522, total_quality_bonus: 350000 }
     });
   } catch (error) {
-    console.error('Error fetching config:', error);
-    res.status(500).json({ error: 'Failed to fetch config' });
+    return handleError(res, error, 'fetch config');
   }
 }

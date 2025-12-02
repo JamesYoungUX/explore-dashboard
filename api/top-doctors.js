@@ -1,8 +1,18 @@
-import { neon } from '@neondatabase/serverless';
+import { getDb } from './_lib/db.js';
+import { handleCors } from './_lib/cors.js';
+import { handleError } from './_lib/errors.js';
 
 export default async function handler(req, res) {
+  // Handle CORS
+  if (handleCors(req, res)) return;
+
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = getDb();
 
     const doctors = await sql`
       SELECT
@@ -53,9 +63,8 @@ export default async function handler(req, res) {
       return acc;
     }, {});
 
-    res.json(Object.values(grouped));
+    res.status(200).json(Object.values(grouped));
   } catch (error) {
-    console.error('Error fetching top doctors:', error);
-    res.status(500).json({ error: 'Failed to fetch top doctors' });
+    return handleError(res, error, 'fetch top doctors');
   }
 }

@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS dashboard_metrics (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Gap categories for shared savings
+-- Gap categories for cost saving opportunities
 CREATE TABLE IF NOT EXISTS gap_categories (
   id SERIAL PRIMARY KEY,
   slug VARCHAR(50) UNIQUE NOT NULL,

@@ -1,11 +1,20 @@
-import { neon } from '@neondatabase/serverless';
+import { getDb } from './_lib/db.js';
+import { handleCors } from './_lib/cors.js';
+import { handleError } from './_lib/errors.js';
 
 export default async function handler(req, res) {
-  try {
-    const sql = neon(process.env.DATABASE_URL);
+  // Handle CORS
+  if (handleCors(req, res)) return;
 
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  try {
+    const sql = getDb();
     const adherence = await sql`
-      SELECT
+      SELECT 
         ma.*,
         p.name,
         p.mrn,
@@ -16,9 +25,8 @@ export default async function handler(req, res) {
       ORDER BY ma.adherence_rate ASC
     `;
 
-    res.json(adherence);
+    res.status(200).json(adherence);
   } catch (error) {
-    console.error('Error fetching medication adherence:', error);
-    res.status(500).json({ error: 'Failed to fetch medication adherence' });
+    return handleError(res, error, 'fetch medication adherence');
   }
 }

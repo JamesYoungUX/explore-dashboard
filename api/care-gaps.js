@@ -1,8 +1,18 @@
-import { neon } from '@neondatabase/serverless';
+import { getDb } from './_lib/db.js';
+import { handleCors } from './_lib/cors.js';
+import { handleError } from './_lib/errors.js';
 
 export default async function handler(req, res) {
+  // Handle CORS
+  if (handleCors(req, res)) return;
+
+  // Only allow GET requests
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
-    const sql = neon(process.env.DATABASE_URL);
+    const sql = getDb();
     const { type, summary } = req.query;
 
     // GET /api/care-gaps?summary=true - Get summary
@@ -18,7 +28,7 @@ export default async function handler(req, res) {
         GROUP BY gap_type
         ORDER BY total_gaps DESC
       `;
-      return res.json(result);
+      return res.status(200).json(result);
     }
 
     // GET /api/care-gaps?type=xyz - Get by type
@@ -34,7 +44,7 @@ export default async function handler(req, res) {
         WHERE cg.gap_type = ${type}
         ORDER BY cg.days_overdue DESC
       `;
-      return res.json(gaps);
+      return res.status(200).json(gaps);
     }
 
     // GET /api/care-gaps - Get all
@@ -48,9 +58,8 @@ export default async function handler(req, res) {
       JOIN patients p ON cg.patient_id = p.id
       ORDER BY cg.days_overdue DESC
     `;
-    res.json(gaps);
+    res.status(200).json(gaps);
   } catch (error) {
-    console.error('Error fetching care gaps:', error);
-    res.status(500).json({ error: 'Failed to fetch care gaps' });
+    return handleError(res, error, 'fetch care gaps');
   }
 }
