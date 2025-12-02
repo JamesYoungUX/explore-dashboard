@@ -61,27 +61,27 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-gray-50 via-orange-50/30 to-yellow-50/30">
-      <div className="max-w-[1600px] mx-auto">
-        <div className="bg-[#111111] text-white px-8 py-6 rounded-2xl mb-8 flex items-center justify-between">
-          <div className="text-4xl font-light"><span className="font-bold text-[#FFD85F]">Stellar</span>Metrics</div>
-          <div className="flex gap-4 text-lg">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 2xl:p-12 bg-gradient-to-br from-gray-50 via-orange-50/30 to-yellow-50/30">
+      <div className="max-w-[1600px] 2xl:max-w-[2000px] mx-auto">
+        <div className="bg-[#111111] text-white px-4 sm:px-6 lg:px-8 py-4 lg:py-6 rounded-2xl mb-6 lg:mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-light"><span className="font-bold text-[#FFD85F]">Stellar</span>Metrics</div>
+          <div className="flex gap-2 sm:gap-4 2xl:gap-6 text-sm sm:text-base lg:text-lg 2xl:text-xl flex-wrap">
             <button
               onClick={() => setActiveView('overview')}
-              className={`px-6 py-3 rounded-lg font-medium ${activeView === 'overview' ? 'bg-[#FFD85F] text-black' : 'hover:bg-white/10'
+              className={`px-3 sm:px-4 lg:px-6 py-2 lg:py-3 rounded-lg font-medium ${activeView === 'overview' ? 'bg-[#FFD85F] text-black' : 'hover:bg-white/10'
                 }`}
             >
               Dashboard
             </button>
             <button
               onClick={() => setActiveView('chosen-initiatives')}
-              className={`px-6 py-3 rounded-lg font-medium ${activeView === 'chosen-initiatives' ? 'bg-[#FFD85F] text-black' : 'hover:bg-white/10'
+              className={`px-3 sm:px-4 lg:px-6 py-2 lg:py-3 rounded-lg font-medium ${activeView === 'chosen-initiatives' ? 'bg-[#FFD85F] text-black' : 'hover:bg-white/10'
                 }`}
             >
               Initiatives
             </button>
-            <button className="px-6 py-3 hover:bg-white/10 rounded-lg">Reports</button>
-            <button className="px-6 py-3 hover:bg-white/10 rounded-lg">Settings</button>
+            <button className="px-3 sm:px-4 lg:px-6 py-2 lg:py-3 hover:bg-white/10 rounded-lg hidden sm:block">Reports</button>
+            <button className="px-3 sm:px-4 lg:px-6 py-2 lg:py-3 hover:bg-white/10 rounded-lg hidden sm:block">Settings</button>
           </div>
         </div>
         {renderView()}

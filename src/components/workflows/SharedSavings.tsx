@@ -120,41 +120,41 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 lg:space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <button
           onClick={onBack}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
         >
-          <ArrowLeft className="w-6 h-6" />
+          <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
         <div>
-          <h1 className="text-4xl font-light">Above-Benchmark Spending</h1>
-          <p className="text-gray-600 mt-2">$420K overspend • Performance year ends Q1</p>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light">Above-Benchmark Spending</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">$420K overspend • Performance year ends Q1</p>
         </div>
       </div>
 
       {/* Summary Card */}
-      <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-2xl p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center">
-              <AlertCircle className="w-6 h-6 text-white" strokeWidth={2} />
+      <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-2xl p-4 sm:p-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-0 mb-4 lg:mb-6">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={2} />
             </div>
-            <div>
-              <div className="text-2xl font-light text-red-900">22% Above Benchmark</div>
-              <div className="text-sm text-red-700 font-light mt-1">1,522 attributed lives • Efficient benchmark: $950 • Actual: $1,042</div>
+            <div className="min-w-0">
+              <div className="text-lg sm:text-xl lg:text-2xl font-light text-red-900">22% Above Benchmark</div>
+              <div className="text-xs sm:text-sm text-red-700 font-light mt-1">1,522 attributed lives • Efficient benchmark: $950 • Actual: $1,042</div>
             </div>
           </div>
-          <div className="text-right">
-            <div className="text-4xl font-light text-red-600">$420K</div>
+          <div className="text-left lg:text-right ml-13 sm:ml-16 lg:ml-0">
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-light text-red-600">$420K</div>
             <div className="text-sm text-red-700 font-light">Overspend</div>
           </div>
         </div>
         
         {/* Benchmark Comparison */}
-        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-red-200">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-red-200">
           <div>
             <div className="text-xs text-red-700 font-light mb-1">Current PMPM</div>
             <div className="text-2xl font-light text-red-900">$1,042</div>
@@ -173,26 +173,26 @@ export default function SharedSavings({ onBack, onNavigate }: Props) {
       </div>
 
       {/* Action Plan - Moved Up */}
-      <div className="bg-white/60 backdrop-blur rounded-2xl p-8 shadow-sm">
-        <h2 className="text-2xl font-light mb-6">Recommendations</h2>
+      <div className="bg-white/60 backdrop-blur rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm">
+        <h2 className="text-xl sm:text-2xl font-light mb-4 sm:mb-6">Recommendations</h2>
         
         <div className="space-y-4">
-          <div className="flex items-start gap-4 p-4 bg-white rounded-lg border border-gray-200">
-            <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-              <span className="text-red-600 font-medium">1</span>
+          <div className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-lg border border-gray-200">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+              <span className="text-red-600 font-medium text-sm sm:text-base">1</span>
             </div>
-            <div className="flex-1">
-              <h3 className="font-medium mb-1">Implement preferred DME supplier network with negotiated rates</h3>
-              <p className="text-sm text-gray-600 mb-2">Target $84K reduction in DME and supplies spending</p>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-sm text-gray-500">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium mb-1 text-sm sm:text-base">Implement preferred DME supplier network with negotiated rates</h3>
+              <p className="text-xs sm:text-sm text-gray-600 mb-2">Target $84K reduction in DME and supplies spending</p>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs sm:text-sm text-gray-500">
                   <span>Owner: Network Contracting</span>
-                  <span>•</span>
+                  <span className="hidden sm:inline">•</span>
                   <span>Timeline: 30 days</span>
                 </div>
                 <button
                   onClick={() => alert('This would link to a Stellar patient/action list for prior authorization implementation')}
-                  className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200 transition-colors"
+                  className="text-xs sm:text-sm bg-blue-100 text-blue-700 px-2 sm:px-3 py-1 rounded-full hover:bg-blue-200 transition-colors self-start sm:self-auto"
                 >
                   → Stellar Actions (89)
                 </button>

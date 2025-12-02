@@ -35,47 +35,47 @@ export default function DashboardOverview({ onSelectArea }: Props) {
   ];
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-8 lg:space-y-16">
       {/* Hero + Big Numbers - Same Line */}
-      <div className="flex items-center justify-between py-8">
+      <div className="flex flex-col lg:flex-row items-center justify-between py-4 lg:py-8 2xl:py-12 gap-6 lg:gap-0">
         <div>
-          <h1 className="text-6xl font-light">Performance Insights</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-6xl 2xl:text-7xl font-light text-center lg:text-left">Performance Insights</h1>
         </div>
-        <div className="flex items-center gap-12">
+        <div className="flex flex-col sm:flex-row items-center gap-6 lg:gap-12 2xl:gap-16">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
               <DollarSign className="w-5 h-5 text-[#111111]" fill="currentColor" strokeWidth={0} />
             </div>
             <div>
-              <div className="text-6xl font-light leading-none">19.0M</div>
-              <div className="text-sm text-gray-500 font-light">Total Cost</div>
+              <div className="text-3xl sm:text-4xl lg:text-6xl font-light leading-none">19.0M</div>
+              <div className="text-xs sm:text-sm text-gray-500 font-light">Total Cost</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Users className="w-5 h-5 text-[#111111]" fill="currentColor" strokeWidth={0} />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#111111]" fill="currentColor" strokeWidth={0} />
             </div>
             <div>
-              <div className="text-6xl font-light leading-none">1,522</div>
-              <div className="text-sm text-gray-500 font-light">Patients</div>
+              <div className="text-3xl sm:text-4xl lg:text-6xl font-light leading-none">1,522</div>
+              <div className="text-xs sm:text-sm text-gray-500 font-light">Patients</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Award className="w-5 h-5 text-[#111111]" fill="currentColor" strokeWidth={0} />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Award className="w-4 h-4 sm:w-5 sm:h-5 text-[#111111]" fill="currentColor" strokeWidth={0} />
             </div>
             <div>
-              <div className="text-6xl font-light leading-none">87%</div>
-              <div className="text-sm text-gray-500 font-light">Quality Measures</div>
+              <div className="text-3xl sm:text-4xl lg:text-6xl font-light leading-none">87%</div>
+              <div className="text-xs sm:text-sm text-gray-500 font-light">Quality Measures</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <DollarSign className="w-5 h-5 text-[#111111]" fill="currentColor" strokeWidth={0} />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-[#111111]" fill="currentColor" strokeWidth={0} />
             </div>
             <div>
-              <div className="text-6xl font-light leading-none text-red-600">-$1.68M</div>
-              <div className="text-sm text-gray-500 font-light">Annual Gap</div>
+              <div className="text-3xl sm:text-4xl lg:text-6xl font-light leading-none text-red-600">-$1.68M</div>
+              <div className="text-xs sm:text-sm text-gray-500 font-light">Annual Gap</div>
             </div>
           </div>
         </div>
@@ -85,8 +85,8 @@ export default function DashboardOverview({ onSelectArea }: Props) {
 
 
         {/* Charts Row */}
-        <div className="grid grid-cols-4 gap-6">
-          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 shadow-sm flex flex-col min-h-[320px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6 2xl:gap-8">
+          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 2xl:px-10 2xl:py-8 shadow-sm flex flex-col min-h-[320px] 2xl:min-h-[400px]">
             <div className="text-xl font-light mb-2">Cost Distribution</div>
             <div className="flex-1 min-h-0">
               <ResponsiveContainer width="100%" height="100%">
@@ -95,8 +95,8 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                     data={costData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={65}
-                    outerRadius={95}
+                    innerRadius={95}
+                    outerRadius={120}
                     paddingAngle={2}
                     dataKey="value"
                   >
@@ -107,7 +107,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-2 gap-3 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-auto pt-4">
               {costData.map((entry) => (
                 <div key={entry.name} className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }}></div>
@@ -117,7 +117,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
             </div>
           </div>
 
-          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 shadow-sm flex flex-col min-h-[320px]">
+          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 2xl:px-10 2xl:py-8 shadow-sm flex flex-col min-h-[320px] 2xl:min-h-[400px]">
             <div className="text-xl font-light mb-1">Cost Trend (PMPM)</div>
             <div className="text-xs text-gray-400 font-light mb-4">Per Member Per Month</div>
             <div className="flex-1 min-h-0">
@@ -146,7 +146,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
             </div>
           </div>
 
-          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 shadow-sm flex flex-col min-h-[320px]">
+          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 2xl:px-10 2xl:py-8 shadow-sm flex flex-col min-h-[320px] 2xl:min-h-[400px]">
             <div className="text-xl font-light mb-2">Risk Distribution</div>
             <div className="flex-1 min-h-0">
               <ResponsiveContainer width="100%" height="100%">
@@ -155,8 +155,8 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                     data={riskDistributionData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={65}
-                    outerRadius={95}
+                    innerRadius={95}
+                    outerRadius={120}
                     paddingAngle={2}
                     dataKey="value"
                   >
@@ -167,7 +167,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="grid grid-cols-2 gap-3 mt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mt-auto pt-4 pb-6">
               {riskDistributionData.map((entry) => (
                 <div key={entry.name} className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }}></div>
@@ -177,7 +177,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
             </div>
           </div>
 
-          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 shadow-sm flex flex-col min-h-[320px]">
+          <div className="bg-white/60 backdrop-blur rounded-2xl px-8 py-6 2xl:px-10 2xl:py-8 shadow-sm flex flex-col min-h-[320px] 2xl:min-h-[400px]">
             <div className="text-xl font-light mb-4">Performance vs Efficiently Managed</div>
             <div className="flex-1 space-y-4">
               <div>
@@ -226,7 +226,7 @@ export default function DashboardOverview({ onSelectArea }: Props) {
             <h3 className="text-lg font-light">Top Opportunities</h3>
             <span className="text-xs text-gray-500 font-light">Last 30 days</span>
           </div>
-          <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
             <div
               onClick={() => onSelectArea('shared-savings' as ProblemArea)}
               className="flex flex-col gap-2 p-4 bg-red-50 rounded-lg border border-red-200 hover:shadow-md transition-shadow cursor-pointer"
@@ -393,30 +393,30 @@ export default function DashboardOverview({ onSelectArea }: Props) {
                     key={problem.id}
                     id={`initiative-${problem.id}`}
                     onClick={() => onSelectArea(problem.id as ProblemArea)}
-                    className={`flex items-center justify-between p-4 rounded-xl hover:bg-gray-50 cursor-pointer transition-all group ${index % 2 === 0 ? 'bg-white/20' : ''
+                    className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4 rounded-xl hover:bg-gray-50 cursor-pointer transition-all group ${index % 2 === 0 ? 'bg-white/20' : ''
                       } scroll-mt-4`}
                   >
-                    <div className="flex items-center gap-4 flex-1">
-                      <div className={`w-10 h-10 ${problem.color === 'red' ? 'bg-red-100' :
+                    <div className="flex items-center gap-3 sm:gap-4 flex-1">
+                      <div className={`w-8 h-8 sm:w-10 sm:h-10 ${problem.color === 'red' ? 'bg-red-100' :
                         problem.color === 'amber' ? 'bg-amber-100' :
                           problem.color === 'blue' ? 'bg-blue-100' : 'bg-green-100'
-                        } rounded-lg flex items-center justify-center`}>
+                        } rounded-lg flex items-center justify-center flex-shrink-0`}>
                         <div className={`w-2 h-2 ${problem.color === 'red' ? 'bg-red-500' :
                           problem.color === 'amber' ? 'bg-amber-500' :
                             problem.color === 'blue' ? 'bg-blue-500' : 'bg-green-500'
                           } rounded-full`}></div>
                       </div>
-                      <div className="flex-1">
-                        <div className="font-normal">{problem.label}</div>
-                        <div className="text-sm text-gray-500 font-light">{problem.desc}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-normal text-sm sm:text-base">{problem.label}</div>
+                        <div className="text-xs sm:text-sm text-gray-500 font-light">{problem.desc}</div>
                       </div>
-                      <div className="text-right mr-4">
-                        <div className="text-sm font-medium text-[#16a34a] mb-1">{problem.impact}</div>
-                        <div className="text-xs text-gray-600 font-light">→ {problem.action}</div>
-                      </div>
-                      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                        <ArrowUpRight className="w-6 h-6 text-gray-600 group-hover:text-[#111111] transition-colors" strokeWidth={2} />
-                      </div>
+                    </div>
+                    <div className="flex items-center justify-between sm:block sm:text-right ml-11 sm:ml-0 sm:mr-4">
+                      <div className="text-sm font-medium text-[#16a34a] mb-0 sm:mb-1">{problem.impact}</div>
+                      <div className="text-xs text-gray-600 font-light">→ {problem.action}</div>
+                    </div>
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-full flex items-center justify-center shadow-sm ml-auto sm:ml-0 flex-shrink-0">
+                      <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 group-hover:text-[#111111] transition-colors" strokeWidth={2} />
                     </div>
                   </div>
                 ))}
