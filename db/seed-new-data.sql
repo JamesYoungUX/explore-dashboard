@@ -332,11 +332,14 @@ INSERT INTO efficiency_kpis (
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'preventable_ed', 'Preventable ED Visits',
   34.5, 28.0, null, 23.2, 'warning', 'percent', 3),
 
-((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'generic_utilization', 'Generic Drug Utilization',
-  85.2, 78.5, 82.0, 8.5, 'good', 'percent', 4),
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'avoidable_ed_visits', 'Avoidable ED visits per 1000',
+  20.1, 21.97, null, -8.5, 'good', 'per_thousand', 4),
 
-((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'pcp_visits', 'Primary Care Visits per Member',
-  4.2, 4.5, 4.8, -6.7, 'good', 'number', 5),
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'imaging_lower_back', 'Imaging for lower back per 1000',
+  7.7, 8.5, null, -9.41, 'good', 'per_thousand', 5),
+
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'annual_wellness_visits', 'Annual wellness visits per 1000',
+  802, 794, null, 1.01, 'good', 'per_thousand', 6),
 
 -- Last 12 Months Efficiency KPIs
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'readmission_rate', 'Readmission Rate',
@@ -348,11 +351,14 @@ INSERT INTO efficiency_kpis (
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'preventable_ed', 'Preventable ED Visits',
   36.2, 28.0, null, 29.3, 'warning', 'percent', 3),
 
-((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'generic_utilization', 'Generic Drug Utilization',
-  83.5, 78.5, 82.0, 6.4, 'good', 'percent', 4),
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'avoidable_ed_visits', 'Avoidable ED visits per 1000',
+  20.1, 21.97, null, -8.5, 'good', 'per_thousand', 4),
 
-((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'pcp_visits', 'Primary Care Visits per Member',
-  4.3, 4.5, 4.8, -4.4, 'good', 'number', 5),
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'imaging_lower_back', 'Imaging for lower back per 1000',
+  7.7, 8.5, null, -9.41, 'good', 'per_thousand', 5),
+
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'annual_wellness_visits', 'Annual wellness visits per 1000',
+  802, 794, null, 1.01, 'good', 'per_thousand', 6),
 
 -- Last Quarter Efficiency KPIs
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'readmission_rate', 'Readmission Rate',
@@ -364,11 +370,14 @@ INSERT INTO efficiency_kpis (
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'preventable_ed', 'Preventable ED Visits',
   35.8, 28.0, null, 27.9, 'warning', 'percent', 3),
 
-((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'generic_utilization', 'Generic Drug Utilization',
-  84.0, 78.5, 82.0, 7.0, 'good', 'percent', 4),
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'avoidable_ed_visits', 'Avoidable ED visits per 1000',
+  20.1, 21.97, null, -8.5, 'good', 'per_thousand', 4),
 
-((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'pcp_visits', 'Primary Care Visits per Member',
-  4.25, 4.5, 4.8, -5.6, 'good', 'number', 5);
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'imaging_lower_back', 'Imaging for lower back per 1000',
+  7.7, 8.5, null, -9.41, 'good', 'per_thousand', 5),
+
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'annual_wellness_visits', 'Annual wellness visits per 1000',
+  802, 794, null, 1.01, 'good', 'per_thousand', 6);
 
 -- ============================================================================
 -- COST OPPORTUNITIES (Dashboard Summary)
