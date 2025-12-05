@@ -1,4 +1,4 @@
-import { getDb } from './_lib/db.js';
+import { getDb, testConnection } from './_lib/db.js';
 import { handleCors } from './_lib/cors.js';
 import { handleError } from './_lib/errors.js';
 
@@ -14,6 +14,23 @@ export default async function handler(req, res) {
   try {
     const sql = getDb();
     const { type } = req.query;
+
+    // GET /api/config?type=health - Health check
+    if (type === 'health') {
+      const dbHealthy = await testConnection();
+      if (!dbHealthy) {
+        return res.status(503).json({
+          status: 'unhealthy',
+          database: 'disconnected',
+          timestamp: new Date().toISOString(),
+        });
+      }
+      return res.status(200).json({
+        status: 'healthy',
+        database: 'connected',
+        timestamp: new Date().toISOString(),
+      });
+    }
 
     // GET /api/config?type=practice - Practice config
     if (type === 'practice') {
