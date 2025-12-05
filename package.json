@@ -6,7 +6,8 @@
     "dev": "vite",
     "dev:api": "vercel dev --listen 3000",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "reset:prototype": "node db/reset-prototype.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",

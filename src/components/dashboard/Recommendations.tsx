@@ -28,7 +28,7 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
   const [data, setData] = useState<RecommendationsResponse | null>(null);
   const [selectedRec, setSelectedRec] = useState<DetailedRecommendation | null>(null);
   const [loading, setLoading] = useState(true);
-  const [detailLoading, setDetailLoading] = useState(false);
+  const [_detailLoading, setDetailLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
@@ -182,8 +182,8 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
             {getStatusIcon(selectedRec.status)}
             <span className="font-medium">{getStatusLabel(selectedRec.status)}</span>
           </div>
-          <div className={`px-4 py-2 rounded-lg font-medium ${getPriorityColor(selectedRec.priority)}`}>
-            {selectedRec.priority.charAt(0).toUpperCase() + selectedRec.priority.slice(1)} Priority
+          <div className={`px-4 py-2 rounded-lg font-medium ${getPriorityColor(selectedRec.priority || 'medium')}`}>
+            {(selectedRec.priority || 'medium').charAt(0).toUpperCase() + (selectedRec.priority || 'medium').slice(1)} Priority
           </div>
         </div>
 
@@ -230,10 +230,6 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
                   onClick={() => onNavigate && cat.categorySlug && onNavigate(cat.categorySlug)}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${cat.performanceStatus === 'red' ? 'bg-red-500' :
-                        cat.performanceStatus === 'yellow' ? 'bg-amber-500' :
-                          cat.performanceStatus === 'green' ? 'bg-green-500' : 'bg-gray-500'
-                      }`} />
                     <span className="font-medium">{cat.categoryName}</span>
                   </div>
                   <div className="flex items-center gap-3">
@@ -421,9 +417,11 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
                     {getStatusIcon(rec.status)}
                     <span>{getStatusLabel(rec.status)}</span>
                   </div>
-                  <div className={`px-3 py-1 rounded-lg text-sm font-medium ${getPriorityColor(rec.priority)}`}>
-                    {rec.priority.charAt(0).toUpperCase() + rec.priority.slice(1)}
-                  </div>
+                  {rec.priority && (
+                    <div className={`px-3 py-1 rounded-lg text-sm font-medium ${getPriorityColor(rec.priority)}`}>
+                      {rec.priority.charAt(0).toUpperCase() + rec.priority.slice(1)}
+                    </div>
+                  )}
                 </div>
                 <p className="text-gray-600 mb-4">{rec.description}</p>
                 <div className="flex flex-wrap gap-4 text-sm">
