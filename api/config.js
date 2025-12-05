@@ -151,6 +151,15 @@ export default async function handler(req, res) {
 
         console.log(`✅ Database reset completed: ${successCount} succeeded, ${errorCount} failed`);
 
+        // Verify what's actually in the database now
+        const categoriesInDb = await sql`
+          SELECT slug, category_name FROM cost_categories
+          WHERE period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')
+          ORDER BY display_order
+          LIMIT 10
+        `;
+        console.log('📋 Categories in DB after reset:', categoriesInDb.map(c => c.slug));
+
         return res.status(200).json({
           success: true,
           message: 'Database reset successfully',
@@ -158,7 +167,8 @@ export default async function handler(req, res) {
           successCount,
           errorCount,
           errors: errors.slice(0, 5), // First 5 errors only
-          verification: { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs }
+          verification: { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs },
+          categoriesInDb: categoriesInDb.map(c => ({ slug: c.slug, name: c.category_name }))
         });
       } catch (error) {
         console.error('Reset error:', error);

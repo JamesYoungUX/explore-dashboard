@@ -43,7 +43,10 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
         const errorText = data.errorCount > 0
           ? ` | ${data.successCount} succeeded, ${data.errorCount} failed. Errors: ${data.errors?.join('; ')}`
           : '';
-        setResetMessage({ type: data.errorCount > 0 ? 'error' : 'success', text: `Database reset: ${data.statementsExecuted} total statements${verificationText}${errorText}. Please refresh manually to see changes.` });
+        const dbCategoriesText = data.categoriesInDb
+          ? ` | Categories in DB: ${data.categoriesInDb.map((c: any) => c.slug).join(', ')}`
+          : '';
+        setResetMessage({ type: data.errorCount > 0 ? 'error' : 'success', text: `Database reset: ${data.statementsExecuted} total statements${verificationText}${errorText}${dbCategoriesText}` });
       } else {
         setResetMessage({ type: 'error', text: data.message || 'Reset failed. Please try again.' });
       }
