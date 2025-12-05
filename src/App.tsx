@@ -116,7 +116,6 @@ function App() {
         return <ChosenInitiatives onBack={goBack} />;
       case 'settings':
         return <Settings
-          onBack={goBack}
           pageVisibility={pageVisibility}
           setPageVisibility={setPageVisibility}
         />;
