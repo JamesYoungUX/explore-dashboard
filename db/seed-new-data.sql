@@ -60,20 +60,19 @@ INSERT INTO cost_categories (
 ) VALUES
 -- RED - Priority Issues (Overspending)
 ('acute-rehab', 'Acute Rehab', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  150.00, 84.10, 65.90, 78.3,
+  150.00, 145.00, 5.00, 3.5,
   9.8, 9.0, 8.9, 'admits_per_k',
-  'red', true, false, 18, 20, '78% above benchmark - high utilization and costs', 1),
+  'red', true, false, 20, 20, '3.5% above benchmark', 1),
 
-('specialty-drugs', 'Specialty Drugs', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  268.00, 195.00, 73.00, 37.4,
-  12.5, 11.8, 5.9, 'patients_on_therapy',
-  'red', true, false, 16, 20, '37% above benchmark - expensive biologics', 2),
-
--- YELLOW - Opportunities (Moderate Issues)
 ('op-surgical', 'OP Surgical', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  185.00, 152.00, 33.00, 21.7,
+  185.00, 179.10, 5.90, 3.2,
   22.5, 19.8, 13.6, 'procedures_per_k',
-  'yellow', true, false, 12, 20, '22% above benchmark - moderate overutilization', 3),
+  'red', true, false, 12, 20, '3.2% above benchmark', 2),
+
+('ip-surgical', 'IP Surgical', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
+  220.00, 214.00, 6.00, 2.8,
+  15.2, 14.5, 4.8, 'admits_per_k',
+  'red', true, false, 7, 20, '2.8% above benchmark', 3),
 
 ('ed-visits', 'ED Visits', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
   142.00, 118.00, 24.00, 20.3,
@@ -86,20 +85,20 @@ INSERT INTO cost_categories (
   'yellow', true, false, 11, 20, '6% above benchmark admissions', 5),
 
 -- GREEN - Strengths (Performing Well / Saving Money!)
-('primary-care', 'Primary Care', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  180.00, 210.00, -30.00, -14.3,
-  4.2, 4.5, -6.7, 'visits_per_member',
-  'green', false, true, 3, 20, '14% below benchmark - efficient primary care management', 6),
+('avoidable-ed-visits', 'Avoidable ED visits', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
+  85.00, 90.00, -5.00, -5.5,
+  180, 195, -7.7, 'visits_per_k',
+  'green', false, true, 1, 20, '5.5% below benchmark', 4),
 
-('preventive-care', 'Preventive Care', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  45.00, 52.00, -7.00, -13.5,
-  2.8, 3.1, -9.7, 'services_per_member',
-  'green', false, true, 4, 20, '13% below benchmark - strong preventive focus', 7),
+('skilled-nursing', 'Skilled Nursing', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
+  120.00, 128.50, -8.50, -6.6,
+  45, 52, -13.5, 'admits_per_k',
+  'green', false, true, 3, 20, '6.6% below benchmark', 5),
 
-('generic-drugs', 'Generic Drugs', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  92.00, 108.00, -16.00, -14.8,
-  85.2, 78.5, 8.5, 'percent_generic',
-  'green', false, true, 2, 20, '15% below benchmark - excellent generic utilization rate', 8),
+('op-radiology', 'OP Radiology', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
+  75.00, 78.00, -3.00, -3.8,
+  125, 135, -7.4, 'studies_per_k',
+  'green', false, true, 5, 20, '3.8% below benchmark', 6),
 
 -- NEUTRAL - Performing at Benchmark
 ('radiology', 'Radiology', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
@@ -116,67 +115,67 @@ INSERT INTO cost_categories (
 -- COST CATEGORIES for Last 12 Months
 -- ============================================================================
 ('acute-rehab', 'Acute Rehab', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  156.00, 84.10, 71.90, 85.5,
+  156.00, 150.50, 5.50, 3.7,
   10.2, 9.0, 13.3, 'admits_per_k',
-  'red', true, false, 19, 20, '86% above benchmark - high utilization and costs', 1),
-
-('specialty-drugs', 'Specialty Drugs', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  273.00, 195.00, 78.00, 40.0,
-  12.8, 11.8, 8.5, 'patients_on_therapy',
-  'red', true, false, 17, 20, '40% above benchmark - expensive biologics', 2),
+  'red', true, false, 20, 20, '3.7% above benchmark', 1),
 
 ('op-surgical', 'OP Surgical', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  190.00, 152.00, 38.00, 25.0,
+  190.00, 183.60, 6.40, 3.4,
   23.5, 19.8, 18.7, 'procedures_per_k',
-  'yellow', true, false, 13, 20, '25% above benchmark - moderate overutilization', 3),
+  'red', true, false, 12, 20, '3.4% above benchmark', 2),
 
-('primary-care', 'Primary Care', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  182.00, 210.00, -28.00, -13.3,
-  4.3, 4.5, -4.4, 'visits_per_member',
-  'green', false, true, 3, 20, '13% below benchmark - efficient primary care management', 4),
+('ip-surgical', 'IP Surgical', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
+  225.00, 218.30, 6.70, 3.0,
+  15.5, 14.5, 6.9, 'admits_per_k',
+  'red', true, false, 7, 20, '3.0% above benchmark', 3),
 
-('generic-drugs', 'Generic Drugs', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  93.50, 108.00, -14.50, -13.4,
-  83.5, 78.5, 6.4, 'percent_generic',
-  'green', false, true, 2, 20, '13% below benchmark - excellent generic utilization rate', 5),
+('avoidable-ed-visits', 'Avoidable ED visits', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
+  86.00, 91.30, -5.30, -5.8,
+  185, 195, -5.1, 'visits_per_k',
+  'green', false, true, 1, 20, '5.8% below benchmark', 4),
 
-('preventive-care', 'Preventive Care', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  45.50, 52.00, -6.50, -12.5,
-  2.9, 3.1, -6.5, 'services_per_member',
-  'green', false, true, 4, 20, '12% below benchmark - strong preventive focus', 6),
+('skilled-nursing', 'Skilled Nursing', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
+  121.00, 130.20, -9.20, -7.0,
+  46, 52, -11.5, 'admits_per_k',
+  'green', false, true, 3, 20, '7.0% below benchmark', 5),
+
+('op-radiology', 'OP Radiology', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
+  76.00, 79.20, -3.20, -4.0,
+  128, 135, -5.2, 'studies_per_k',
+  'green', false, true, 5, 20, '4.0% below benchmark', 6),
 
 -- ============================================================================
 -- COST CATEGORIES for Last Quarter
 -- ============================================================================
 ('acute-rehab', 'Acute Rehab', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  158.00, 84.10, 73.90, 87.9,
+  158.00, 152.50, 5.50, 3.6,
   10.5, 9.0, 16.7, 'admits_per_k',
-  'red', true, false, 19, 20, '88% above benchmark - high utilization and costs', 1),
-
-('specialty-drugs', 'Specialty Drugs', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  275.00, 195.00, 80.00, 41.0,
-  13.0, 11.8, 10.2, 'patients_on_therapy',
-  'red', true, false, 17, 20, '41% above benchmark - expensive biologics', 2),
+  'red', true, false, 20, 20, '3.6% above benchmark', 1),
 
 ('op-surgical', 'OP Surgical', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  191.00, 152.00, 39.00, 25.7,
+  191.00, 184.90, 6.10, 3.3,
   24.0, 19.8, 21.2, 'procedures_per_k',
-  'yellow', true, false, 14, 20, '26% above benchmark - moderate overutilization', 3),
+  'red', true, false, 12, 20, '3.3% above benchmark', 2),
 
-('primary-care', 'Primary Care', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  182.00, 210.00, -28.00, -13.3,
-  4.25, 4.5, -5.6, 'visits_per_member',
-  'green', false, true, 3, 20, '13% below benchmark - efficient primary care management', 4),
+('ip-surgical', 'IP Surgical', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
+  227.00, 220.50, 6.50, 2.9,
+  15.8, 14.5, 9.0, 'admits_per_k',
+  'red', true, false, 7, 20, '2.9% above benchmark', 3),
 
-('generic-drugs', 'Generic Drugs', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  94.00, 108.00, -14.00, -13.0,
-  84.0, 78.5, 7.0, 'percent_generic',
-  'green', false, true, 2, 20, '13% below benchmark - excellent generic utilization rate', 5),
+('avoidable-ed-visits', 'Avoidable ED visits', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
+  87.00, 92.20, -5.20, -5.6,
+  188, 195, -3.6, 'visits_per_k',
+  'green', false, true, 1, 20, '5.6% below benchmark', 4),
 
-('preventive-care', 'Preventive Care', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  45.70, 52.00, -6.30, -12.1,
-  2.85, 3.1, -8.1, 'services_per_member',
-  'green', false, true, 4, 20, '12% below benchmark - strong preventive focus', 6);
+('skilled-nursing', 'Skilled Nursing', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
+  122.00, 131.00, -9.00, -6.8,
+  47, 52, -9.6, 'admits_per_k',
+  'green', false, true, 3, 20, '6.8% below benchmark', 5),
+
+('op-radiology', 'OP Radiology', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
+  77.00, 80.10, -3.10, -3.9,
+  130, 135, -3.7, 'studies_per_k',
+  'green', false, true, 5, 20, '3.9% below benchmark', 6);
 
 -- ============================================================================
 -- RECOMMENDATIONS
@@ -392,78 +391,78 @@ INSERT INTO cost_opportunities (
 -- Overspending (RED - show on dashboard)
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
   (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
-  'overspending', 65900, 78.3, 18, 1, true),
-
-((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'specialty-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
-  'overspending', 73000, 37.4, 16, 2, true),
+  'overspending', 65900, 3.5, 20, 1, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
   (SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
-  'overspending', 33000, 21.7, 12, 3, true),
+  'overspending', 33000, 3.2, 12, 2, true),
+
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
+  (SELECT id FROM cost_categories WHERE slug = 'ip-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
+  'overspending', 25000, 2.8, 7, 3, true),
 
 -- Efficient (GREEN - show on dashboard to highlight wins!)
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'primary-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
-  'efficient', -30000, -14.3, 3, 4, true),
+  (SELECT id FROM cost_categories WHERE slug = 'avoidable-ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
+  'efficient', -18000, -5.5, 1, 4, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'generic-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
-  'efficient', -16000, -14.8, 2, 5, true),
+  (SELECT id FROM cost_categories WHERE slug = 'skilled-nursing' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
+  'efficient', -12000, -6.6, 3, 5, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'preventive-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
-  'efficient', -7000, -13.5, 4, 6, true),
+  (SELECT id FROM cost_categories WHERE slug = 'op-radiology' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
+  'efficient', -8000, -3.8, 5, 6, true),
 
 -- Last 12 Months - Cost Opportunities
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
   (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
-  'overspending', 72000, 85.6, 19, 1, true),
-
-((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  (SELECT id FROM cost_categories WHERE slug = 'specialty-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
-  'overspending', 78500, 40.3, 17, 2, true),
+  'overspending', 72000, 3.7, 20, 1, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
   (SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
-  'overspending', 38000, 25.0, 13, 3, true),
+  'overspending', 38000, 3.4, 12, 2, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  (SELECT id FROM cost_categories WHERE slug = 'primary-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
-  'efficient', -28000, -13.3, 3, 4, true),
+  (SELECT id FROM cost_categories WHERE slug = 'ip-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
+  'overspending', 28000, 3.0, 7, 3, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  (SELECT id FROM cost_categories WHERE slug = 'generic-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
-  'efficient', -14500, -13.4, 2, 5, true),
+  (SELECT id FROM cost_categories WHERE slug = 'avoidable-ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
+  'efficient', -19000, -5.8, 1, 4, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
-  (SELECT id FROM cost_categories WHERE slug = 'preventive-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
-  'efficient', -6500, -12.5, 4, 6, true),
+  (SELECT id FROM cost_categories WHERE slug = 'skilled-nursing' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
+  'efficient', -13000, -7.0, 3, 5, true),
+
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
+  (SELECT id FROM cost_categories WHERE slug = 'op-radiology' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_12_months')),
+  'efficient', -8500, -4.0, 5, 6, true),
 
 -- Last Quarter - Cost Opportunities
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
   (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
-  'overspending', 18500, 88.0, 19, 1, true),
-
-((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  (SELECT id FROM cost_categories WHERE slug = 'specialty-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
-  'overspending', 20000, 41.0, 17, 2, true),
+  'overspending', 18500, 3.6, 20, 1, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
   (SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
-  'overspending', 9500, 25.7, 14, 3, true),
+  'overspending', 9500, 3.3, 12, 2, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  (SELECT id FROM cost_categories WHERE slug = 'primary-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
-  'efficient', -7000, -13.5, 3, 4, true),
+  (SELECT id FROM cost_categories WHERE slug = 'ip-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
+  'overspending', 7000, 2.9, 7, 3, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  (SELECT id FROM cost_categories WHERE slug = 'generic-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
-  'efficient', -3800, -14.0, 2, 5, true),
+  (SELECT id FROM cost_categories WHERE slug = 'avoidable-ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
+  'efficient', -4500, -5.6, 1, 4, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
-  (SELECT id FROM cost_categories WHERE slug = 'preventive-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
-  'efficient', -1700, -13.0, 4, 6, true);
+  (SELECT id FROM cost_categories WHERE slug = 'skilled-nursing' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
+  'efficient', -3200, -6.8, 3, 5, true),
+
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
+  (SELECT id FROM cost_categories WHERE slug = 'op-radiology' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'last_quarter')),
+  'efficient', -2000, -3.9, 5, 6, true);
 
 -- ============================================================================
 -- COST CATEGORY DRILL-DOWN DATA
