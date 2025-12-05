@@ -114,11 +114,20 @@ export default async function handler(req, res) {
         const hasSpecialtyDrugs = seedSQL.includes('specialty-drugs');
         console.log('🔍 File verification:', { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs });
 
+        // Remove comment-only lines first, then split into statements
+        const cleanSQL = seedSQL
+          .split('\n')
+          .filter(line => {
+            const trimmed = line.trim();
+            return trimmed.length > 0 && !trimmed.startsWith('--');
+          })
+          .join('\n');
+
         // Split into individual statements and execute
-        const statements = seedSQL
+        const statements = cleanSQL
           .split(';')
           .map(s => s.trim())
-          .filter(s => s.length > 0 && !s.startsWith('--'));
+          .filter(s => s.length > 0);
 
         console.log(`📊 Executing ${statements.length} SQL statements...`);
 
