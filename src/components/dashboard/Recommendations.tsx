@@ -168,11 +168,7 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
     );
   }
 
-  if (!data) {
-    return null;
-  }
-
-  // Detail View
+  // Detail View - check this before data since we don't need data for detail view
   if (selectedRec) {
     return (
       <div className="space-y-6 lg:space-y-8">
@@ -326,7 +322,11 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
     );
   }
 
-  // List View
+  // List View - need data for this
+  if (!data) {
+    return null;
+  }
+
   return (
     <div className="space-y-6 lg:space-y-8">
       {/* Header */}
