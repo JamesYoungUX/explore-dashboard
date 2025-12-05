@@ -9,6 +9,31 @@ interface Props {
 
 export default function DashboardOverview({ onSelectArea }: Props) {
   const [showHighPriorityOnly, setShowHighPriorityOnly] = useState(false);
+  const [selectedPeriod, setSelectedPeriod] = useState('ytd');
+
+  const getDateRange = (period: string) => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    switch (period) {
+      case 'ytd':
+        return `Jan 1, ${currentYear} - ${today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+      case 'last_12_months':
+        const last12Start = new Date(today);
+        last12Start.setMonth(today.getMonth() - 12);
+        return `${last12Start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+      case 'last_quarter':
+        const quarter = Math.floor(today.getMonth() / 3);
+        const lastQuarter = quarter === 0 ? 3 : quarter - 1;
+        const lastQuarterYear = quarter === 0 ? currentYear - 1 : currentYear;
+        const quarterStart = new Date(lastQuarterYear, lastQuarter * 3, 1);
+        const quarterEnd = new Date(lastQuarterYear, (lastQuarter + 1) * 3, 0);
+        return `${quarterStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${quarterEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+      default:
+        return '';
+    }
+  };
+
   const costData = [
     { name: 'DME/Supplies', value: 84, color: '#DC2626' },
     { name: 'Specialty Drugs', value: 74, color: '#F59E0B' },
@@ -222,10 +247,25 @@ export default function DashboardOverview({ onSelectArea }: Props) {
 
         {/* Top Opportunities */}
         <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-1 gap-3">
             <h3 className="text-lg font-light">Top Opportunities</h3>
-            <span className="text-xs text-gray-500 font-light">Last 30 days</span>
+            <div className="flex flex-col items-end gap-1">
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-600 font-medium">Period:</label>
+                <select
+                  value={selectedPeriod}
+                  onChange={(e) => setSelectedPeriod(e.target.value)}
+                  className="px-4 py-2 rounded-lg text-sm font-medium bg-white border border-gray-300 text-gray-700 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FFD85F] focus:border-transparent cursor-pointer"
+                >
+                  <option value="ytd">Year to Date</option>
+                  <option value="last_12_months">Last 12 Months</option>
+                  <option value="last_quarter">Last Quarter</option>
+                </select>
+              </div>
+              <span className="text-xs text-gray-700 font-normal">{getDateRange(selectedPeriod)}</span>
+            </div>
           </div>
+          <div className="mb-3"></div>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
             <div
               onClick={() => onSelectArea('shared-savings' as ProblemArea)}
