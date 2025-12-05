@@ -249,7 +249,14 @@ export interface CostOpportunity {
   displayOrder?: number;
   showOnDashboard?: boolean;
 
-  // Joined category data
+  // Joined category data (flat from API)
+  categorySlug?: string;
+  categoryName?: string;
+  performanceStatus?: 'red' | 'yellow' | 'green';
+  spendingPmpmActual?: number;
+  spendingPmpmBenchmark?: number;
+
+  // Legacy nested structure (for backward compatibility)
   category?: CostCategory;
 }
 

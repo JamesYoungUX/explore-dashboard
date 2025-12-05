@@ -251,17 +251,17 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                   .map((opp) => (
                     <div
                       key={opp.id}
-                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-5 rounded-xl border ${getPerformanceColor(opp.category?.performanceStatus || 'yellow')} cursor-pointer hover:shadow-lg transition-all hover:scale-[1.01]`}
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-5 rounded-xl border ${getPerformanceColor(opp.performanceStatus || 'yellow')} cursor-pointer hover:shadow-lg transition-all hover:scale-[1.01]`}
                       onClick={() => {
-                        if (opp.category?.slug) {
-                          onNavigate(opp.category.slug as ProblemArea);
+                        if (opp.categorySlug) {
+                          onNavigate(opp.categorySlug as ProblemArea);
                         }
                       }}
                     >
                       <div className="flex items-center gap-3 flex-1 mb-3 sm:mb-0">
-                        {getPerformanceIcon(opp.category?.performanceStatus || 'yellow')}
+                        {getPerformanceIcon(opp.performanceStatus || 'yellow')}
                         <div>
-                          <div className="font-medium text-base lg:text-lg">{opp.category?.categoryName}</div>
+                          <div className="font-medium text-base lg:text-lg">{opp.categoryName}</div>
                           <div className="text-sm lg:text-base opacity-80">
                             {opp.percentVariance !== null && opp.percentVariance !== undefined ? (
                               `${Math.abs(opp.percentVariance).toFixed(1)}% above benchmark`
@@ -294,17 +294,17 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                   .map((opp) => (
                     <div
                       key={opp.id}
-                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-5 rounded-xl border ${getPerformanceColor(opp.category?.performanceStatus || 'green')} cursor-pointer hover:shadow-lg transition-all hover:scale-[1.01]`}
+                      className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-5 rounded-xl border ${getPerformanceColor(opp.performanceStatus || 'green')} cursor-pointer hover:shadow-lg transition-all hover:scale-[1.01]`}
                       onClick={() => {
-                        if (opp.category?.slug) {
-                          onNavigate(opp.category.slug as ProblemArea);
+                        if (opp.categorySlug) {
+                          onNavigate(opp.categorySlug as ProblemArea);
                         }
                       }}
                     >
                       <div className="flex items-center gap-3 flex-1 mb-3 sm:mb-0">
-                        {getPerformanceIcon(opp.category?.performanceStatus || 'green')}
+                        {getPerformanceIcon(opp.performanceStatus || 'green')}
                         <div>
-                          <div className="font-medium text-base lg:text-lg">{opp.category?.categoryName}</div>
+                          <div className="font-medium text-base lg:text-lg">{opp.categoryName}</div>
                           <div className="text-sm lg:text-base opacity-80">
                             {opp.percentVariance !== null && opp.percentVariance !== undefined ? (
                               `${Math.abs(opp.percentVariance).toFixed(1)}% below benchmark`
