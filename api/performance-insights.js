@@ -18,6 +18,11 @@ export default async function handler(req, res) {
   // Handle CORS
   if (handleCors(req, res)) return;
 
+  // Disable caching to ensure fresh data
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -95,6 +100,12 @@ export default async function handler(req, res) {
         AND co.show_on_dashboard = true
       ORDER BY co.display_order ASC, ABS(co.amount_variance) DESC
     `;
+
+    // Debug logging
+    console.log('📊 Cost Opportunities returned:', costOpportunities.length);
+    if (costOpportunities.length > 0) {
+      console.log('First 3 categories:', costOpportunities.slice(0, 3).map(co => co.categoryName));
+    }
 
     // Get efficiency KPIs for this period
     const efficiencyKpis = await sql`
