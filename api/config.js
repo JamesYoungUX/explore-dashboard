@@ -103,8 +103,8 @@ export default async function handler(req, res) {
         const { readFileSync } = await import('fs');
         const { resolve } = await import('path');
 
-        // Read the seed SQL file
-        const seedPath = resolve(process.cwd(), 'db/seed-new-data.sql');
+        // Read the seed SQL file (using v2 to bypass Vercel cache)
+        const seedPath = resolve(process.cwd(), 'db/seed-v2.sql');
         console.log('🔧 Reading seed file from:', seedPath);
         const seedSQL = readFileSync(seedPath, 'utf-8');
 
