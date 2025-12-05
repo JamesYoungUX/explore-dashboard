@@ -253,15 +253,15 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                       key={opp.id}
                       className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-5 rounded-xl border ${getPerformanceColor(opp.category?.performanceStatus || 'yellow')} cursor-pointer hover:shadow-lg transition-all hover:scale-[1.01]`}
                       onClick={() => {
-                        if (opp.categorySlug) {
-                          onNavigate(opp.categorySlug as ProblemArea);
+                        if (opp.category?.slug) {
+                          onNavigate(opp.category.slug as ProblemArea);
                         }
                       }}
                     >
                       <div className="flex items-center gap-3 flex-1 mb-3 sm:mb-0">
                         {getPerformanceIcon(opp.category?.performanceStatus || 'yellow')}
                         <div>
-                          <div className="font-medium text-base lg:text-lg">{opp.categoryName}</div>
+                          <div className="font-medium text-base lg:text-lg">{opp.category?.categoryName}</div>
                           <div className="text-sm lg:text-base opacity-80">
                             {opp.percentVariance !== null && opp.percentVariance !== undefined ? (
                               `${Math.abs(opp.percentVariance).toFixed(1)}% above benchmark`
@@ -296,15 +296,15 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                       key={opp.id}
                       className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 lg:p-5 rounded-xl border ${getPerformanceColor(opp.category?.performanceStatus || 'green')} cursor-pointer hover:shadow-lg transition-all hover:scale-[1.01]`}
                       onClick={() => {
-                        if (opp.categorySlug) {
-                          onNavigate(opp.categorySlug as ProblemArea);
+                        if (opp.category?.slug) {
+                          onNavigate(opp.category.slug as ProblemArea);
                         }
                       }}
                     >
                       <div className="flex items-center gap-3 flex-1 mb-3 sm:mb-0">
                         {getPerformanceIcon(opp.category?.performanceStatus || 'green')}
                         <div>
-                          <div className="font-medium text-base lg:text-lg">{opp.categoryName}</div>
+                          <div className="font-medium text-base lg:text-lg">{opp.category?.categoryName}</div>
                           <div className="text-sm lg:text-base opacity-80">
                             {opp.percentVariance !== null && opp.percentVariance !== undefined ? (
                               `${Math.abs(opp.percentVariance).toFixed(1)}% below benchmark`
@@ -483,7 +483,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                         </span>
                         <span>totalling</span>
                         <span>
-                          {formatCurrency(rec.estimatedSavings)} (47%)
+                          {formatCurrency(rec.estimatedSavings || 0)} (47%)
                         </span>
                         <span>from</span>
                         <button
@@ -511,7 +511,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                         </span>
                         <span>totalling</span>
                         <span>
-                          {formatCurrency(rec.estimatedSavings)}
+                          {formatCurrency(rec.estimatedSavings || 0)}
                         </span>
                         <span>from</span>
                         <button

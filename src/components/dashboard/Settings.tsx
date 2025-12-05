@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, AlertTriangle, RefreshCw, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, RefreshCw, Eye } from 'lucide-react';
 
 interface PageVisibility {
   dashboard: boolean;
@@ -87,14 +87,12 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
               </div>
               <button
                 onClick={() => togglePage('dashboard')}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFD85F] focus:ring-offset-2 ${
-                  pageVisibility.dashboard ? 'bg-[#FFD85F]' : 'bg-gray-200'
-                }`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFD85F] focus:ring-offset-2 ${pageVisibility.dashboard ? 'bg-[#FFD85F]' : 'bg-gray-200'
+                  }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    pageVisibility.dashboard ? 'translate-x-6' : 'translate-x-1'
-                  }`}
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${pageVisibility.dashboard ? 'translate-x-6' : 'translate-x-1'
+                    }`}
                 />
               </button>
             </div>
@@ -110,14 +108,12 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
               </div>
               <button
                 onClick={() => togglePage('initiatives')}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFD85F] focus:ring-offset-2 ${
-                  pageVisibility.initiatives ? 'bg-[#FFD85F]' : 'bg-gray-200'
-                }`}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#FFD85F] focus:ring-offset-2 ${pageVisibility.initiatives ? 'bg-[#FFD85F]' : 'bg-gray-200'
+                  }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    pageVisibility.initiatives ? 'translate-x-6' : 'translate-x-1'
-                  }`}
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${pageVisibility.initiatives ? 'translate-x-6' : 'translate-x-1'
+                    }`}
                 />
               </button>
             </div>
@@ -165,9 +161,8 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
 
             {/* Status Message */}
             {resetMessage && (
-              <div className={`mt-4 p-4 rounded-lg ${
-                resetMessage.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
-              }`}>
+              <div className={`mt-4 p-4 rounded-lg ${resetMessage.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'
+                }`}>
                 <p className="font-medium">{resetMessage.text}</p>
               </div>
             )}
