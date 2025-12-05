@@ -105,7 +105,14 @@ export default async function handler(req, res) {
 
         // Read the seed SQL file
         const seedPath = resolve(process.cwd(), 'db/seed-new-data.sql');
+        console.log('🔧 Reading seed file from:', seedPath);
         const seedSQL = readFileSync(seedPath, 'utf-8');
+
+        // Log a snippet to verify correct file
+        const hasIPSurgical = seedSQL.includes('ip-surgical');
+        const hasAvoidableED = seedSQL.includes('avoidable-ed-visits');
+        const hasSpecialtyDrugs = seedSQL.includes('specialty-drugs');
+        console.log('🔍 File verification:', { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs });
 
         // Split into individual statements and execute
         const statements = seedSQL
@@ -113,14 +120,19 @@ export default async function handler(req, res) {
           .map(s => s.trim())
           .filter(s => s.length > 0 && !s.startsWith('--'));
 
+        console.log(`📊 Executing ${statements.length} SQL statements...`);
+
         for (const statement of statements) {
           await sql.unsafe(statement);
         }
 
+        console.log('✅ Database reset completed successfully');
+
         return res.status(200).json({
           success: true,
           message: 'Database reset successfully',
-          statementsExecuted: statements.length
+          statementsExecuted: statements.length,
+          verification: { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs }
         });
       } catch (error) {
         console.error('Reset error:', error);
