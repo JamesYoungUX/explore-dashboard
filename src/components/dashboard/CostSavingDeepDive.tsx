@@ -31,7 +31,7 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
       params.append('periodKey', selectedPeriod);
       if (statusFilter) params.append('status', statusFilter);
 
-      const response = await fetch(`http://localhost:3000/api/cost-categories?${params.toString()}`);
+      const response = await fetch(`/api/cost-categories?${params.toString()}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch cost categories');

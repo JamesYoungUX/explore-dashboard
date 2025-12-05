@@ -46,7 +46,7 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
       if (statusFilter) params.append('status', statusFilter);
       if (priorityFilter) params.append('priority', priorityFilter);
 
-      const response = await fetch(`http://localhost:3000/api/recommendations?${params.toString()}`);
+      const response = await fetch(`/api/recommendations?${params.toString()}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch recommendations');
@@ -65,7 +65,7 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
   const fetchRecommendationDetail = async (id: number) => {
     try {
       setDetailLoading(true);
-      const response = await fetch(`http://localhost:3000/api/recommendations?id=${id}`);
+      const response = await fetch(`/api/recommendations?id=${id}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch recommendation details');

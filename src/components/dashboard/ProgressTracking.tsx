@@ -25,7 +25,7 @@ export default function ProgressTracking({ onBack }: Props) {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch('http://localhost:3000/api/recommendations');
+      const response = await fetch('/api/recommendations');
 
       if (!response.ok) {
         throw new Error('Failed to fetch recommendations');
@@ -44,7 +44,7 @@ export default function ProgressTracking({ onBack }: Props) {
   const updateStatus = async (id: number, newStatus: RecommendationStatus) => {
     try {
       setUpdatingId(id);
-      const response = await fetch('http://localhost:3000/api/recommendations', {
+      const response = await fetch('/api/recommendations', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

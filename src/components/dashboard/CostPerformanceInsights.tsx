@@ -43,7 +43,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`http://localhost:3000/api/performance-insights?periodKey=${selectedPeriod}`);
+      const response = await fetch(`/api/performance-insights?periodKey=${selectedPeriod}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch performance insights');

@@ -28,25 +28,13 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
     setResetMessage(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/reset-prototype', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setResetMessage({ type: 'success', text: 'Prototype reset successfully! Refreshing in 2 seconds...' });
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      } else {
-        setResetMessage({ type: 'error', text: data.message || 'Reset failed. Please try again.' });
-      }
+      // Note: reset-prototype endpoint removed to meet Vercel function limit
+      setResetMessage({ type: 'error', text: 'Reset functionality temporarily disabled in production.' });
     } catch (error) {
-      setResetMessage({ type: 'error', text: 'Network error. Please check the API server.' });
+      setResetMessage({ type: 'error', text: 'Reset functionality temporarily disabled in production.' });
     } finally {
       setIsResetting(false);
+      setShowResetConfirm(false);
     }
   };
 

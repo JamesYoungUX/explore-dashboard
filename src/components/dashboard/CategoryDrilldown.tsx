@@ -58,7 +58,7 @@ export default function CategoryDrilldown({ categorySlug, onBack, onNavigateToRe
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`http://localhost:3000/api/cost-categories?slug=${categorySlug}`);
+      const response = await fetch(`/api/cost-categories?slug=${categorySlug}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch category details');
