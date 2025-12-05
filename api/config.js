@@ -138,13 +138,15 @@ export default async function handler(req, res) {
         for (let i = 0; i < statements.length; i++) {
           try {
             const stmt = statements[i];
-            console.log(`Executing statement ${i + 1}/${statements.length}: ${stmt.substring(0, 50)}...`);
+            const preview = stmt.substring(0, 80).replace(/\s+/g, ' ');
+            console.log(`[${i + 1}/${statements.length}] Executing: ${preview}...`);
             await sql.unsafe(stmt);
             successCount++;
+            console.log(`[${i + 1}/${statements.length}] ✓ Success`);
           } catch (error) {
             errorCount++;
             const errorMsg = `Statement ${i + 1} failed: ${error.message}`;
-            console.error(errorMsg);
+            console.error(`[${i + 1}/${statements.length}] ✗ FAILED:`, errorMsg);
             errors.push(errorMsg);
           }
         }
