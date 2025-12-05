@@ -3,17 +3,18 @@
 -- Description: Realistic sample data showing red/yellow/GREEN categories
 
 -- Clear existing data from new tables (idempotent)
-DELETE FROM cost_category_discharging_hospitals;
-DELETE FROM cost_category_drgs;
-DELETE FROM cost_category_hospitals;
-DELETE FROM cost_opportunities;
-DELETE FROM efficiency_kpis;
-DELETE FROM program_resources;
-DELETE FROM recommendation_cost_categories;
-DELETE FROM recommendations;
-DELETE FROM cost_categories;
-DELETE FROM performance_metrics;
-DELETE FROM performance_periods;
+-- Use TRUNCATE to reset sequences for proper ID assignment
+TRUNCATE TABLE cost_category_discharging_hospitals RESTART IDENTITY CASCADE;
+TRUNCATE TABLE cost_category_drgs RESTART IDENTITY CASCADE;
+TRUNCATE TABLE cost_category_hospitals RESTART IDENTITY CASCADE;
+TRUNCATE TABLE cost_opportunities RESTART IDENTITY CASCADE;
+TRUNCATE TABLE efficiency_kpis RESTART IDENTITY CASCADE;
+TRUNCATE TABLE program_resources RESTART IDENTITY CASCADE;
+TRUNCATE TABLE recommendation_cost_categories RESTART IDENTITY CASCADE;
+TRUNCATE TABLE recommendations RESTART IDENTITY CASCADE;
+TRUNCATE TABLE cost_categories RESTART IDENTITY CASCADE;
+TRUNCATE TABLE performance_metrics RESTART IDENTITY CASCADE;
+TRUNCATE TABLE performance_periods RESTART IDENTITY CASCADE;
 
 -- ============================================================================
 -- PERFORMANCE PERIODS
@@ -378,28 +379,28 @@ INSERT INTO cost_opportunities (
 ) VALUES
 -- Overspending (RED - show on dashboard)
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'acute-rehab'),
+  (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
   'overspending', 65900, 78.3, 18, 1, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'specialty-drugs'),
+  (SELECT id FROM cost_categories WHERE slug = 'specialty-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
   'overspending', 73000, 37.4, 16, 2, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'op-surgical'),
+  (SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
   'overspending', 33000, 21.7, 12, 3, true),
 
 -- Efficient (GREEN - show on dashboard to highlight wins!)
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'primary-care'),
+  (SELECT id FROM cost_categories WHERE slug = 'primary-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
   'efficient', -30000, -14.3, 3, 4, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'generic-drugs'),
+  (SELECT id FROM cost_categories WHERE slug = 'generic-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
   'efficient', -16000, -14.8, 2, 5, true),
 
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'),
-  (SELECT id FROM cost_categories WHERE slug = 'preventive-care'),
+  (SELECT id FROM cost_categories WHERE slug = 'preventive-care' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')),
   'efficient', -7000, -13.5, 4, 6, true),
 
 -- Last 12 Months - Cost Opportunities
@@ -456,32 +457,32 @@ INSERT INTO cost_opportunities (
 -- COST CATEGORY DRILL-DOWN DATA
 -- ============================================================================
 
--- Hospitals for Acute Rehab
+-- Hospitals for Acute Rehab (YTD only - drill-down data)
 INSERT INTO cost_category_hospitals (cost_category_id, hospital_name, discharges, avg_los, spend, readmission_rate, display_order) VALUES
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), 'Valley Inpatient Rehab Facility', 200, 11.5, 320000, 6.1, 1),
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), 'Regional Rehab Center', 145, 12.2, 245000, 7.8, 2),
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), 'Coastal IRF', 98, 10.8, 178000, 5.2, 3);
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Valley Inpatient Rehab Facility', 200, 11.5, 320000, 6.1, 1),
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Regional Rehab Center', 145, 12.2, 245000, 7.8, 2),
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Coastal IRF', 98, 10.8, 178000, 5.2, 3);
 
--- DRGs for Acute Rehab
+-- DRGs for Acute Rehab (YTD only - drill-down data)
 INSERT INTO cost_category_drgs (cost_category_id, drg_code, drg_description, patient_count, total_spend, avg_spend_per_patient, benchmark_avg, percent_above_benchmark, display_order) VALUES
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), '945', 'Rehabilitation w CC/MCC', 89, 156000, 17528, 12840, 36.5, 1),
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), '946', 'Rehabilitation w/o CC/MCC', 156, 287000, 18397, 13200, 39.4, 2),
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), '949', 'Aftercare w CC/MCC', 45, 98000, 21778, 15840, 37.5, 3);
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), '945', 'Rehabilitation w CC/MCC', 89, 156000, 17528, 12840, 36.5, 1),
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), '946', 'Rehabilitation w/o CC/MCC', 156, 287000, 18397, 13200, 39.4, 2),
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), '949', 'Aftercare w CC/MCC', 45, 98000, 21778, 15840, 37.5, 3);
 
--- Discharging Hospitals for Acute Rehab
+-- Discharging Hospitals for Acute Rehab (YTD only - drill-down data)
 INSERT INTO cost_category_discharging_hospitals (cost_category_id, hospital_name, discharges, percent_discharged_to_irf, percent_discharged_to_irf_benchmark, display_order) VALUES
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), 'Regional Medical Center', 178, 24.1, 17.2, 1),
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), 'Valley General Hospital', 142, 22.8, 17.2, 2),
-((SELECT id FROM cost_categories WHERE slug = 'acute-rehab'), 'Community Hospital', 87, 19.5, 17.2, 3);
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Regional Medical Center', 178, 24.1, 17.2, 1),
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Valley General Hospital', 142, 22.8, 17.2, 2),
+((SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Community Hospital', 87, 19.5, 17.2, 3);
 
--- Hospitals for OP Surgical
+-- Hospitals for OP Surgical (YTD only - drill-down data)
 INSERT INTO cost_category_hospitals (cost_category_id, hospital_name, discharges, avg_los, spend, readmission_rate, display_order) VALUES
-((SELECT id FROM cost_categories WHERE slug = 'op-surgical'), 'Valley Surgical Center', 425, null, 285000, null, 1),
-((SELECT id FROM cost_categories WHERE slug = 'op-surgical'), 'Regional Outpatient Surgery', 318, null, 198000, null, 2),
-((SELECT id FROM cost_categories WHERE slug = 'op-surgical'), 'Coastal Surgery Center', 245, null, 156000, null, 3);
+((SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Valley Surgical Center', 425, null, 285000, null, 1),
+((SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Regional Outpatient Surgery', 318, null, 198000, null, 2),
+((SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'Coastal Surgery Center', 245, null, 156000, null, 3);
 
--- DRGs for OP Surgical
+-- DRGs for OP Surgical (YTD only - drill-down data)
 INSERT INTO cost_category_drgs (cost_category_id, drg_code, drg_description, patient_count, total_spend, avg_spend_per_patient, benchmark_avg, percent_above_benchmark, display_order) VALUES
-((SELECT id FROM cost_categories WHERE slug = 'op-surgical'), 'CPT-29881', 'Arthroscopy, knee, surgical', 125, 187500, 1500, 1200, 25.0, 1),
-((SELECT id FROM cost_categories WHERE slug = 'op-surgical'), 'CPT-47562', 'Laparoscopy, cholecystectomy', 89, 160200, 1800, 1450, 24.1, 2),
-((SELECT id FROM cost_categories WHERE slug = 'op-surgical'), 'CPT-43239', 'Upper GI endoscopy with biopsy', 234, 140400, 600, 485, 23.7, 3);
+((SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'CPT-29881', 'Arthroscopy, knee, surgical', 125, 187500, 1500, 1200, 25.0, 1),
+((SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'CPT-47562', 'Laparoscopy, cholecystectomy', 89, 160200, 1800, 1450, 24.1, 2),
+((SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 'CPT-43239', 'Upper GI endoscopy with biopsy', 234, 140400, 600, 485, 23.7, 3);
