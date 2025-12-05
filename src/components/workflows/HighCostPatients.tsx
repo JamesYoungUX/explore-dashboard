@@ -1,13 +1,13 @@
 import { ArrowLeft, AlertCircle, DollarSign } from 'lucide-react';
 
-// High-cost patient metrics
+// High need patient metrics
 const TOTAL_HIGH_COST_PATIENTS = 47;
 const TOTAL_EXCESS_COST = 280000;
 const CURRENT_PMPM = 1042;
 const TARGET_PMPM = 950;
 const TOP_PERFORMER_PMPM = 850;
 
-// Categories of high-cost patients
+// Categories of high need patients
 const categoryData: Record<string, {
   avgCost: number;
   percentOfTotal: number;
@@ -130,7 +130,7 @@ export default function HighCostPatients({ onBack }: Props) {
           <ArrowLeft className="w-6 h-6" />
         </button>
         <div>
-          <h1 className="text-4xl font-light">High-Cost Patients</h1>
+          <h1 className="text-4xl font-light">High Need Patients</h1>
           <p className="text-gray-600 mt-2">{TOTAL_HIGH_COST_PATIENTS} patients • {formatCurrency(TOTAL_EXCESS_COST)} excess costs</p>
         </div>
       </div>
