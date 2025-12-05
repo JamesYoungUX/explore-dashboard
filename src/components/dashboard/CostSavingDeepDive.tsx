@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, TrendingUp, TrendingDown, AlertCircle, CheckCircle, ChevronRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, CheckCircle, ChevronRight } from 'lucide-react';
 import type { CostCategory, PerformancePeriod } from '../../types';
 
 interface Props {
-  onBack: () => void;
   onNavigate?: (categorySlug: string) => void;
 }
 
@@ -12,7 +11,7 @@ interface CostCategoriesResponse {
   categories: CostCategory[];
 }
 
-export default function CostSavingDeepDive({ onBack, onNavigate }: Props) {
+export default function CostSavingDeepDive({ onNavigate }: Props) {
   const [data, setData] = useState<CostCategoriesResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
