@@ -28,10 +28,23 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
     setResetMessage(null);
 
     try {
-      // Note: reset-prototype endpoint removed to meet Vercel function limit
-      setResetMessage({ type: 'error', text: 'Reset functionality temporarily disabled in production.' });
+      const response = await fetch('/api/config?type=reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setResetMessage({ type: 'success', text: 'Database reset successfully! Refreshing in 2 seconds...' });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } else {
+        setResetMessage({ type: 'error', text: data.message || 'Reset failed. Please try again.' });
+      }
     } catch (error) {
-      setResetMessage({ type: 'error', text: 'Reset functionality temporarily disabled in production.' });
+      setResetMessage({ type: 'error', text: 'Network error. Please check your connection.' });
     } finally {
       setIsResetting(false);
       setShowResetConfirm(false);

@@ -6,8 +6,8 @@ export default async function handler(req, res) {
   // Handle CORS
   if (handleCors(req, res)) return;
 
-  // Only allow GET requests
-  if (req.method !== 'GET') {
+  // Allow GET and POST requests
+  if (req.method !== 'GET' && req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -94,6 +94,41 @@ export default async function handler(req, res) {
         return acc;
       }, {});
       return res.status(200).json(grouped);
+    }
+
+    // POST /api/config?type=reset - Reset database to initial state
+    if (type === 'reset' && req.method === 'POST') {
+      try {
+        // Import the seed file dynamically
+        const { readFileSync } = await import('fs');
+        const { resolve } = await import('path');
+
+        // Read the seed SQL file
+        const seedPath = resolve(process.cwd(), 'db/seed-new-data.sql');
+        const seedSQL = readFileSync(seedPath, 'utf-8');
+
+        // Split into individual statements and execute
+        const statements = seedSQL
+          .split(';')
+          .map(s => s.trim())
+          .filter(s => s.length > 0 && !s.startsWith('--'));
+
+        for (const statement of statements) {
+          await sql.unsafe(statement);
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: 'Database reset successfully',
+          statementsExecuted: statements.length
+        });
+      } catch (error) {
+        console.error('Reset error:', error);
+        return res.status(500).json({
+          success: false,
+          message: `Reset failed: ${error.message}`
+        });
+      }
     }
 
     // GET /api/config - Return all config
