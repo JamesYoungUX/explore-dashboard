@@ -140,6 +140,16 @@ export default async function handler(req, res) {
             const stmt = statements[i];
             const preview = stmt.substring(0, 80).replace(/\s+/g, ' ');
             console.log(`[${i + 1}/${statements.length}] Executing: ${preview}...`);
+
+            // For the cost_categories INSERT, log the first few category slugs
+            if (i === 13 && stmt.includes('INSERT INTO cost_categories')) {
+              const slugMatches = stmt.match(/'([a-z-]+)',/g);
+              if (slugMatches) {
+                const slugs = slugMatches.slice(0, 10).map(m => m.replace(/[',]/g, ''));
+                console.log(`[${i + 1}] First 10 slugs in statement:`, slugs);
+              }
+            }
+
             await sql.unsafe(stmt);
             successCount++;
             console.log(`[${i + 1}/${statements.length}] ✓ Success`);
