@@ -75,9 +75,9 @@ function App() {
       case 'cost-performance-insights':
         return <CostPerformanceInsights onNavigate={navigateTo} />;
       case 'cost-categories':
-        return <CostSavingDeepDive onBack={goBack} onNavigate={navigateTo} />;
+        return <CostSavingDeepDive onNavigate={(slug) => navigateTo(slug as ProblemArea)} />;
       case 'recommendations':
-        return <Recommendations onBack={goBack} onNavigate={navigateTo} />;
+        return <Recommendations onBack={goBack} onNavigate={(slug) => navigateTo(slug as ProblemArea)} />;
       case 'progress-tracking':
         return <ProgressTracking onBack={goBack} />;
       case 'shared-savings':
