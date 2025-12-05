@@ -36,10 +36,14 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setResetMessage({ type: 'success', text: 'Database reset successfully! Refreshing in 2 seconds...' });
+        // Show verification data if available
+        const verificationText = data.verification
+          ? ` | File check: IP-Surgical=${data.verification.hasIPSurgical}, Avoidable-ED=${data.verification.hasAvoidableED}, Specialty-Drugs=${data.verification.hasSpecialtyDrugs}`
+          : '';
+        setResetMessage({ type: 'success', text: `Database reset successfully! ${data.statementsExecuted} statements executed${verificationText}. Refreshing in 5 seconds...` });
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 5000);
       } else {
         setResetMessage({ type: 'error', text: data.message || 'Reset failed. Please try again.' });
       }
