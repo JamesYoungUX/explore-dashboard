@@ -38,7 +38,12 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
   useEffect(() => {
     // If we have an initialRecId, load the detail directly
     if (initialRecId) {
-      fetchRecommendationDetail(initialRecId);
+      const loadDetail = async () => {
+        setLoading(true);
+        await fetchRecommendationDetail(initialRecId);
+        setLoading(false);
+      };
+      loadDetail();
     } else {
       // Otherwise load the recommendations list
       fetchRecommendations();
