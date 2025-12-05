@@ -114,74 +114,24 @@ export default async function handler(req, res) {
         const hasSpecialtyDrugs = seedSQL.includes('specialty-drugs');
         console.log('🔍 File verification:', { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs });
 
-        // Remove comment-only lines first, then split into statements
-        const cleanSQL = seedSQL
-          .split('\n')
-          .filter(line => {
-            const trimmed = line.trim();
-            return trimmed.length > 0 && !trimmed.startsWith('--');
-          })
-          .join('\n');
+        console.log('📊 Executing seed file as single transaction...');
 
-        // Split into individual statements and execute
-        const statements = cleanSQL
-          .split(';')
-          .map(s => s.trim())
-          .filter(s => s.length > 0);
+        try {
+          // Execute the entire file as one transaction using unsafe()
+          // This preserves multi-line strings and handles complex SQL properly
+          await sql.unsafe(seedSQL);
 
-        console.log(`📊 Executing ${statements.length} SQL statements...`);
+          console.log('✅ Database reset successful!');
 
-        let successCount = 0;
-        let errorCount = 0;
-        const errors = [];
-
-        for (let i = 0; i < statements.length; i++) {
-          try {
-            const stmt = statements[i];
-            const preview = stmt.substring(0, 80).replace(/\s+/g, ' ');
-            console.log(`[${i + 1}/${statements.length}] Executing: ${preview}...`);
-
-            // For the cost_categories INSERT, log the first few category slugs
-            if (i === 13 && stmt.includes('INSERT INTO cost_categories')) {
-              const slugMatches = stmt.match(/'([a-z-]+)',/g);
-              if (slugMatches) {
-                const slugs = slugMatches.slice(0, 10).map(m => m.replace(/[',]/g, ''));
-                console.log(`[${i + 1}] First 10 slugs in statement:`, slugs);
-              }
-            }
-
-            await sql.unsafe(stmt);
-            successCount++;
-            console.log(`[${i + 1}/${statements.length}] ✓ Success`);
-          } catch (error) {
-            errorCount++;
-            const errorMsg = `Statement ${i + 1} failed: ${error.message}`;
-            console.error(`[${i + 1}/${statements.length}] ✗ FAILED:`, errorMsg);
-            errors.push(errorMsg);
-          }
+          return res.status(200).json({
+            success: true,
+            message: 'Database reset to initial state',
+            timestamp: new Date().toISOString()
+          });
+        } catch (execError) {
+          console.error('❌ Error executing seed file:', execError);
+          throw execError;
         }
-
-        console.log(`✅ Database reset completed: ${successCount} succeeded, ${errorCount} failed`);
-
-        // Verify what's actually in the database now
-        const categoriesInDb = await sql`
-          SELECT slug, category_name FROM cost_categories
-          WHERE period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')
-          ORDER BY display_order
-          LIMIT 10
-        `;
-        console.log('📋 Categories in DB after reset:', categoriesInDb.map(c => c.slug));
-
-        return res.status(200).json({
-          success: true,
-          message: 'Database reset successfully',
-          statementsExecuted: statements.length,
-          successCount,
-          errorCount,
-          errors: errors.slice(0, 5), // First 5 errors only
-          verification: { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs },
-          categoriesInDb: categoriesInDb.map(c => ({ slug: c.slug, name: c.category_name }))
-        });
       } catch (error) {
         console.error('Reset error:', error);
         return res.status(500).json({
