@@ -250,26 +250,23 @@ INSERT INTO recommendations (
 -- RECOMMENDATION COST CATEGORIES (Many-to-Many Mapping)
 -- ============================================================================
 INSERT INTO recommendation_cost_categories (recommendation_id, cost_category_id, impact_amount) VALUES
--- Discharge planning → Acute Rehab
-(1, (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 65900),
+-- Care management (#1) → Multiple categories
+(1, (SELECT id FROM cost_categories WHERE slug = 'inpatient-medical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 20000),
+(1, (SELECT id FROM cost_categories WHERE slug = 'ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 15000),
+(1, (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 10000),
 
--- Step therapy → Specialty Drugs
-(2, (SELECT id FROM cost_categories WHERE slug = 'specialty-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 73000),
+-- GUIDE program (#2) → Inpatient Medical
+(2, (SELECT id FROM cost_categories WHERE slug = 'inpatient-medical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 73000),
 
--- Urgent care → ED Visits
-(3, (SELECT id FROM cost_categories WHERE slug = 'ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 24000),
+-- Discharge planning (#3) → Acute Rehab
+(3, (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 65900),
 
--- Pre-surgical optimization → OP Surgical + Inpatient Medical
-(4, (SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 18000),
-(4, (SELECT id FROM cost_categories WHERE slug = 'inpatient-medical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 15000),
+-- Urgent care (#4) → ED Visits
+(4, (SELECT id FROM cost_categories WHERE slug = 'ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 24000),
 
--- Care management → Multiple categories
-(5, (SELECT id FROM cost_categories WHERE slug = 'inpatient-medical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 20000),
-(5, (SELECT id FROM cost_categories WHERE slug = 'ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 15000),
-(5, (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 10000),
-
--- Generic drug program → Generic Drugs (maintaining strength)
-(6, (SELECT id FROM cost_categories WHERE slug = 'generic-drugs' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 8000);
+-- Pre-surgical optimization (#5) → OP Surgical + IP Surgical
+(5, (SELECT id FROM cost_categories WHERE slug = 'op-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 18000),
+(5, (SELECT id FROM cost_categories WHERE slug = 'ip-surgical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 15000);
 
 -- ============================================================================
 -- PROGRAM RESOURCES
