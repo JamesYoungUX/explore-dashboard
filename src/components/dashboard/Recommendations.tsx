@@ -24,7 +24,7 @@ interface DetailedRecommendation extends Recommendation {
   };
 }
 
-export default function Recommendations({ onBack, onNavigate }: Props) {
+export default function Recommendations({ onBack, onNavigate: _onNavigate }: Props) {
   const [data, setData] = useState<RecommendationsResponse | null>(null);
   const [selectedRec, setSelectedRec] = useState<DetailedRecommendation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +32,7 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
+  const [showLinkModal, setShowLinkModal] = useState(false);
 
   useEffect(() => {
     fetchRecommendations();
@@ -227,7 +228,7 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
                 <div
                   key={cat.categoryId}
                   className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => onNavigate && cat.categorySlug && onNavigate(cat.categorySlug)}
+                  onClick={() => setShowLinkModal(true)}
                 >
                   <div className="flex items-center gap-3">
                     <span className="font-medium">{cat.categoryName}</span>
@@ -435,7 +436,7 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              onNavigate && cat.categorySlug && onNavigate(cat.categorySlug);
+                              setShowLinkModal(true);
                             }}
                             className="text-blue-600 hover:text-blue-800 hover:underline"
                           >
@@ -455,7 +456,7 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              fetchRecommendationDetail(rec.id);
+                              setShowLinkModal(true);
                             }}
                             className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
                           >
@@ -491,6 +492,32 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
       {data.recommendations.length === 0 && (
         <div className="text-center py-12 bg-white/60 backdrop-blur rounded-2xl">
           <div className="text-gray-500">No recommendations found with the selected filters.</div>
+        </div>
+      )}
+
+      {/* Link Modal */}
+      {showLinkModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-6 max-w-md mx-4 shadow-2xl">
+            <div className="flex items-start gap-3 mb-4">
+              <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Prototype Link</h3>
+                <p className="text-sm text-gray-700">
+                  This prototype would link into the Stellar application's patient view, where you could see detailed patient information and cost breakdowns.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowLinkModal(false)}
+                className="px-5 py-2.5 bg-[#FFD85F] hover:bg-[#FFD85F]/90 text-black rounded-lg font-medium transition-colors"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
