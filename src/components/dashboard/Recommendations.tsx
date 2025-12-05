@@ -424,6 +424,49 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
                   )}
                 </div>
                 <p className="text-gray-600 mb-4">{rec.description}</p>
+
+                {/* Cost Areas Summary */}
+                {rec.affectedCategories && rec.affectedCategories.length > 0 && (
+                  <div className="mb-4 p-3 bg-blue-50/50 rounded-lg border border-blue-100">
+                    <p className="text-sm text-gray-700">
+                      <span className="font-medium">Cost areas: </span>
+                      {rec.affectedCategories.map((cat, idx) => (
+                        <span key={cat.categoryId}>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onNavigate && cat.categorySlug && onNavigate(cat.categorySlug);
+                            }}
+                            className="text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            {cat.categoryName}
+                          </button>
+                          {idx < rec.affectedCategories!.length - 1 && ', '}
+                        </span>
+                      ))}
+                      {rec.estimatedSavings && (
+                        <span className="font-medium text-green-700">
+                          {' '}totaling {formatCurrency(rec.estimatedSavings)}
+                        </span>
+                      )}
+                      {rec.affectedLives && (
+                        <>
+                          {' '}from{' '}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              fetchRecommendationDetail(rec.id);
+                            }}
+                            className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                          >
+                            {formatNumber(rec.affectedLives)} patients
+                          </button>
+                        </>
+                      )}
+                    </p>
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-4 text-sm">
                   {rec.estimatedSavings && (
                     <div className="flex items-center gap-2 text-green-600">
@@ -438,15 +481,6 @@ export default function Recommendations({ onBack, onNavigate }: Props) {
                     </div>
                   )}
                 </div>
-                {rec.affectedCategories && rec.affectedCategories.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {rec.affectedCategories.map((cat) => (
-                      <span key={cat.categoryId} className="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded-full">
-                        {cat.categoryName}
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
               <ChevronRight className="w-6 h-6 text-gray-400 flex-shrink-0 self-center lg:self-start lg:mt-2" />
             </div>
