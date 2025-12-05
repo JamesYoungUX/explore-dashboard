@@ -29,22 +29,25 @@ INSERT INTO performance_periods (period_key, period_label, start_date, end_date,
 -- ============================================================================
 INSERT INTO performance_metrics (period_id, metric_type, current_value, previous_value, change_percent, change_direction, benchmark_value, is_above_benchmark, display_format) VALUES
 -- YTD period metrics
-((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'total_cost', 1680000, 1742000, -3.6, 'down', 1450000, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'total_cost', 4980760, 4840000, 2.9, 'up', 1450000, true, 'currency'),
 ((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'patient_count', 1522, 1485, 2.5, 'up', 1522, false, 'number'),
-((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'quality_score', 87, 84, 3.6, 'up', 90, false, 'percent'),
-((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'cost_pmpm', 1042, 1073, -2.9, 'down', 950, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'risk_score', 1.08, 1.085, -0.5, 'down', 1.0, true, 'number'),
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'cost_pmpm', 1080, 1053, 2.6, 'up', 950, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'ytd'), 'cost_savings_opportunity', 750000, 765000, -2.1, 'down', 500000, true, 'currency'),
 
 -- Last 12 Months period metrics
-((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'total_cost', 1742000, 1820000, -4.3, 'down', 1450000, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'total_cost', 4980760, 4840000, 2.9, 'up', 1450000, true, 'currency'),
 ((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'patient_count', 1485, 1450, 2.4, 'up', 1485, false, 'number'),
-((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'quality_score', 84, 82, 2.4, 'up', 90, false, 'percent'),
-((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'cost_pmpm', 1073, 1145, -6.3, 'down', 950, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'risk_score', 1.08, 1.085, -0.5, 'down', 1.0, true, 'number'),
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'cost_pmpm', 1080, 1053, 2.6, 'up', 950, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'last_12_months'), 'cost_savings_opportunity', 765000, 800000, -4.4, 'down', 500000, true, 'currency'),
 
 -- Last Quarter period metrics
-((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'total_cost', 425000, 445000, -4.5, 'down', 362500, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'total_cost', 4980760, 4840000, 2.9, 'up', 1450000, true, 'currency'),
 ((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'patient_count', 1480, 1465, 1.0, 'up', 1480, false, 'number'),
-((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'quality_score', 85, 83, 2.4, 'up', 90, false, 'percent'),
-((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'cost_pmpm', 1065, 1125, -5.3, 'down', 950, true, 'currency');
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'risk_score', 1.08, 1.085, -0.5, 'down', 1.0, true, 'number'),
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'cost_pmpm', 1080, 1053, 2.6, 'up', 950, true, 'currency'),
+((SELECT id FROM performance_periods WHERE period_key = 'last_quarter'), 'cost_savings_opportunity', 190000, 200000, -5.0, 'down', 125000, true, 'currency');
 
 -- ============================================================================
 -- COST CATEGORIES (Showing RED, YELLOW, and GREEN)
@@ -186,25 +189,35 @@ INSERT INTO recommendations (
   can_convert_to_workflow, workflow_type
 ) VALUES
 -- High Priority
+('Implement a care management program',
+  'Deploy intensive care management program targeting high-risk patients to reduce avoidable admissions and improve care coordination.',
+  'not_started', 'high',
+  350000, 39, 'medium',
+  'High need patients', 39,
+  true,
+  'This care management program identifies high-risk patients prone to avoidable admissions and provides intensive care coordination, including regular check-ins, medication management, and care plan development.',
+  null,
+  true, 'care_management'),
+
+('Refer patients with dementia to GUIDE program',
+  'Enroll eligible dementia patients in the GUIDE program for comprehensive care management and caregiver support.',
+  'not_started', 'high',
+  120000, 87, 'low',
+  'Patients with dementia', 87,
+  true,
+  'The GUIDE program provides comprehensive dementia care management including care coordination, caregiver education and support, and 24/7 access to a care team.',
+  null,
+  true, 'care_coordination'),
+
 ('Implement discharge planning protocols for rehab patients',
   'Partner with discharging hospitals to implement standardized discharge planning protocols that reduce unnecessary IRF admissions and promote home-based rehab when appropriate.',
   'not_started', 'high',
   65900, 148, 'medium',
   'Post-acute rehab candidates', 148,
   true,
-  'This program establishes partnerships with top discharging hospitals to create standardized discharge planning protocols. Care coordinators work with hospital discharge planners to assess patients for home-based rehab alternatives.',
+  'This program establishes partnerships with top discharging hospitals to create standardized discharge planning protocols.',
   null,
   true, 'care_coordination'),
-
-('Deploy step therapy program for specialty biologics',
-  'Implement step therapy protocols requiring trial of lower-cost alternatives before high-cost biologics for rheumatology and gastroenterology patients.',
-  'not_started', 'high',
-  73000, 189, 'medium',
-  'Patients on specialty biologics', 189,
-  true,
-  'Step therapy program establishes clinical pathways requiring trial of conventional therapies before advancing to expensive biologics. Program includes specialist engagement and prior authorization workflow.',
-  null,
-  false, null),
 
 ('Launch extended-hours urgent care program',
   'Establish extended-hours urgent care access (evenings and weekends) to divert non-emergency ED visits to lower-cost settings.',
@@ -212,7 +225,7 @@ INSERT INTO recommendations (
   24000, 780, 'high',
   'High ED utilizers', 285,
   true,
-  'Extended-hours urgent care program provides same-day access for urgent but non-emergency conditions during evenings (5pm-10pm) and weekends. Includes patient education campaign and PCP referral protocols.',
+  'Extended-hours urgent care program provides same-day access for urgent but non-emergency conditions.',
   'https://vimeo.com/example123',
   true, 'care_access'),
 
@@ -225,17 +238,7 @@ INSERT INTO recommendations (
   false, null, null,
   false, null),
 
-('Deploy care management for high-cost patients',
-  'Intensive care management program targeting top 5% of patients by cost with complex chronic conditions.',
-  'already_doing', 'medium',
-  45000, 76, 'low',
-  'High-cost patients (top 5%)', 76,
-  true,
-  'Intensive care management program assigns dedicated care coordinators to highest-cost patients. Coordinators provide medication reconciliation, care transitions support, and proactive chronic disease management.',
-  null,
-  true, 'care_management'),
-
--- Low Priority (Already doing well, but could optimize further)
+-- Low Priority
 ('Expand generic drug program',
   'Continue expanding generic drug utilization through provider education and formulary optimization.',
   'already_doing', 'low',
