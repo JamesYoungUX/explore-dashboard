@@ -36,15 +36,14 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
   const [showLinkModal, setShowLinkModal] = useState(false);
 
   useEffect(() => {
-    fetchRecommendations();
-  }, [statusFilter, priorityFilter]);
-
-  // Auto-load recommendation detail if initialRecId is provided
-  useEffect(() => {
-    if (initialRecId && data) {
+    // If we have an initialRecId, load the detail directly
+    if (initialRecId) {
       fetchRecommendationDetail(initialRecId);
+    } else {
+      // Otherwise load the recommendations list
+      fetchRecommendations();
     }
-  }, [initialRecId, data]);
+  }, [statusFilter, priorityFilter, initialRecId]);
 
   const fetchRecommendations = async () => {
     try {
