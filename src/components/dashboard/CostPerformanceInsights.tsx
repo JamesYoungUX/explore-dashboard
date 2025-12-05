@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown, ArrowUp, ArrowDown, ArrowRight, AlertCircle, 
 import type { PerformanceInsightsResponse, ProblemArea } from '../../types';
 
 interface Props {
-  onNavigate: (view: ProblemArea) => void;
+  onNavigate: (view: ProblemArea, recId?: number) => void;
 }
 
 export default function CostPerformanceInsights({ onNavigate }: Props) {
@@ -449,7 +449,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
               <div key={rec.id}>
                 <div
                   className="flex items-start gap-4 p-5 lg:p-6 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onClick={() => onNavigate('recommendations' as ProblemArea)}
+                  onClick={() => onNavigate('recommendations' as ProblemArea, rec.id)}
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">

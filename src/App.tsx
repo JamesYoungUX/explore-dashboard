@@ -23,6 +23,7 @@ import type { ProblemArea } from './types';
 function App() {
   const [activeView, setActiveView] = useState<ProblemArea | 'overview'>('cost-performance-insights');
   const [navigationHistory, setNavigationHistory] = useState<(ProblemArea | 'overview')[]>(['cost-performance-insights']);
+  const [recommendationId, setRecommendationId] = useState<number | null>(null);
 
   // Page visibility settings (default off)
   const [pageVisibility, setPageVisibility] = useState(() => {
@@ -34,9 +35,10 @@ function App() {
   });
 
   // Custom navigation function that tracks history
-  const navigateTo = (view: ProblemArea | 'overview') => {
+  const navigateTo = (view: ProblemArea | 'overview', recId?: number) => {
     setNavigationHistory(prev => [...prev, view]);
     setActiveView(view);
+    setRecommendationId(recId ?? null);
   };
 
   // Go back function
@@ -77,7 +79,7 @@ function App() {
       case 'cost-categories':
         return <CostSavingDeepDive onNavigate={(slug) => navigateTo(slug as ProblemArea)} />;
       case 'recommendations':
-        return <Recommendations onBack={goBack} onNavigate={(slug) => navigateTo(slug as ProblemArea)} />;
+        return <Recommendations onBack={goBack} onNavigate={(slug) => navigateTo(slug as ProblemArea)} initialRecId={recommendationId} />;
       case 'progress-tracking':
         return <ProgressTracking onBack={goBack} />;
       case 'shared-savings':

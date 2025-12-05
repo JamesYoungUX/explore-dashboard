@@ -5,6 +5,7 @@ import type { Recommendation, ProgramResource } from '../../types';
 interface Props {
   onBack: () => void;
   onNavigate?: (categorySlug: string) => void;
+  initialRecId?: number | null;
 }
 
 interface RecommendationsResponse {
@@ -24,7 +25,7 @@ interface DetailedRecommendation extends Recommendation {
   };
 }
 
-export default function Recommendations({ onBack, onNavigate: _onNavigate }: Props) {
+export default function Recommendations({ onBack, onNavigate: _onNavigate, initialRecId }: Props) {
   const [data, setData] = useState<RecommendationsResponse | null>(null);
   const [selectedRec, setSelectedRec] = useState<DetailedRecommendation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,6 +38,13 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate }: Pro
   useEffect(() => {
     fetchRecommendations();
   }, [statusFilter, priorityFilter]);
+
+  // Auto-load recommendation detail if initialRecId is provided
+  useEffect(() => {
+    if (initialRecId && data) {
+      fetchRecommendationDetail(initialRecId);
+    }
+  }, [initialRecId, data]);
 
   const fetchRecommendations = async () => {
     try {
