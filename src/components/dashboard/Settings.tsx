@@ -40,10 +40,7 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
         const verificationText = data.verification
           ? ` | File check: IP-Surgical=${data.verification.hasIPSurgical}, Avoidable-ED=${data.verification.hasAvoidableED}, Specialty-Drugs=${data.verification.hasSpecialtyDrugs}`
           : '';
-        setResetMessage({ type: 'success', text: `Database reset successfully! ${data.statementsExecuted} statements executed${verificationText}. Refreshing in 5 seconds...` });
-        setTimeout(() => {
-          window.location.reload();
-        }, 5000);
+        setResetMessage({ type: 'success', text: `Database reset successfully! ${data.statementsExecuted} statements executed${verificationText}. Please refresh the page manually to see changes.` });
       } else {
         setResetMessage({ type: 'error', text: data.message || 'Reset failed. Please try again.' });
       }
