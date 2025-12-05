@@ -1,7 +1,7 @@
 import { ArrowLeft, AlertCircle, DollarSign } from 'lucide-react';
 
 // High need patient metrics
-const TOTAL_HIGH_COST_PATIENTS = 47;
+const TOTAL_HIGH_COST_PATIENTS = 39;
 const TOTAL_EXCESS_COST = 280000;
 const CURRENT_PMPM = 1042;
 const TARGET_PMPM = 950;
@@ -172,9 +172,9 @@ export default function HighCostPatients({ onBack }: Props) {
         </div>
       </div>
 
-      {/* Stellar Suggestions */}
+      {/* Recommendations */}
       <div className="bg-white/60 backdrop-blur rounded-2xl p-8 shadow-sm">
-        <h2 className="text-2xl font-light mb-6">Stellar Suggestions</h2>
+        <h2 className="text-2xl font-light mb-6">Recommendations</h2>
 
         <div className="space-y-4">
           {categories
