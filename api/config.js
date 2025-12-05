@@ -122,16 +122,33 @@ export default async function handler(req, res) {
 
         console.log(`📊 Executing ${statements.length} SQL statements...`);
 
-        for (const statement of statements) {
-          await sql.unsafe(statement);
+        let successCount = 0;
+        let errorCount = 0;
+        const errors = [];
+
+        for (let i = 0; i < statements.length; i++) {
+          try {
+            const stmt = statements[i];
+            console.log(`Executing statement ${i + 1}/${statements.length}: ${stmt.substring(0, 50)}...`);
+            await sql.unsafe(stmt);
+            successCount++;
+          } catch (error) {
+            errorCount++;
+            const errorMsg = `Statement ${i + 1} failed: ${error.message}`;
+            console.error(errorMsg);
+            errors.push(errorMsg);
+          }
         }
 
-        console.log('✅ Database reset completed successfully');
+        console.log(`✅ Database reset completed: ${successCount} succeeded, ${errorCount} failed`);
 
         return res.status(200).json({
           success: true,
           message: 'Database reset successfully',
           statementsExecuted: statements.length,
+          successCount,
+          errorCount,
+          errors: errors.slice(0, 5), // First 5 errors only
           verification: { hasIPSurgical, hasAvoidableED, hasSpecialtyDrugs }
         });
       } catch (error) {
