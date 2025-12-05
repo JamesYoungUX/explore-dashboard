@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, AlertTriangle, RefreshCw, Eye } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Eye } from 'lucide-react';
 
 interface PageVisibility {
   dashboard: boolean;
@@ -7,12 +7,11 @@ interface PageVisibility {
 }
 
 interface SettingsProps {
-  onBack: () => void;
   pageVisibility: PageVisibility;
   setPageVisibility: (visibility: PageVisibility) => void;
 }
 
-export default function Settings({ onBack, pageVisibility, setPageVisibility }: SettingsProps) {
+export default function Settings({ pageVisibility, setPageVisibility }: SettingsProps) {
   const togglePage = (page: keyof PageVisibility) => {
     setPageVisibility({
       ...pageVisibility,
@@ -61,17 +60,9 @@ export default function Settings({ onBack, pageVisibility, setPageVisibility }: 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={onBack}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-        >
-          <ArrowLeft className="w-6 h-6" />
-        </button>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600 mt-1">Manage prototype configuration and data</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
+        <p className="text-gray-600 mt-1">Manage prototype configuration and data</p>
       </div>
 
       {/* Settings Sections */}

@@ -524,6 +524,28 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                           87 patients with dementia
                         </button>
                       </div>
+                    ) : rec.title === 'Implement discharge planning protocols for rehab patients' ? (
+                      /* Special formatting for Discharge Planning */
+                      <div className="flex flex-wrap items-center gap-2 text-sm lg:text-base text-gray-700 bg-gray-50 p-3 rounded-lg">
+                        <span>Cost area(s):</span>
+                        <span className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full font-medium border-2 border-blue-200">
+                          Acute Rehab
+                        </span>
+                        <span className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full font-medium border-2 border-blue-200">
+                          IP Medical
+                        </span>
+                        <span className="px-3 py-1.5 bg-blue-50 text-blue-700 rounded-full font-medium border-2 border-blue-200">
+                          ED
+                        </span>
+                        <span>totalling</span>
+                        <span>
+                          {formatCurrency(rec.estimatedSavings || 0)}
+                        </span>
+                        <span>from</span>
+                        <span className="font-medium">
+                          {formatNumber(rec.affectedLives || 0)} patients affected
+                        </span>
+                      </div>
                     ) : (
                       /* Default formatting for other recommendations */
                       <>

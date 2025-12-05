@@ -175,7 +175,15 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
         {/* Header */}
         <div className="flex items-center gap-4">
           <button
-            onClick={() => setSelectedRec(null)}
+            onClick={() => {
+              // If we came from another page (via initialRecId), go back to that page
+              // Otherwise, just clear the detail view to show the list
+              if (initialRecId) {
+                onBack();
+              } else {
+                setSelectedRec(null);
+              }
+            }}
             className="p-2 hover:bg-white/60 rounded-lg transition-colors"
           >
             <ArrowLeft className="w-6 h-6" />
@@ -185,46 +193,112 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
           </div>
         </div>
 
-        {/* Status and Priority */}
-        <div className="flex flex-wrap gap-3">
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${getStatusColor(selectedRec.status)}`}>
-            {getStatusIcon(selectedRec.status)}
-            <span className="font-medium">{getStatusLabel(selectedRec.status)}</span>
-          </div>
-          <div className={`px-4 py-2 rounded-lg font-medium ${getPriorityColor(selectedRec.priority || 'medium')}`}>
-            {(selectedRec.priority || 'medium').charAt(0).toUpperCase() + (selectedRec.priority || 'medium').slice(1)} Priority
+
+        {/* Key Metrics - Combined Card */}
+        <div className="bg-white/80 backdrop-blur rounded-3xl shadow-sm p-6 lg:p-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-4 xl:gap-6 lg:divide-x divide-gray-200">
+            <div className="space-y-2">
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Patients</div>
+              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">{selectedRec.affectedLives ? formatNumber(selectedRec.affectedLives) : 'N/A'}</div>
+            </div>
+            <div className="space-y-2 lg:pl-4 xl:pl-6">
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Risk Score</div>
+              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">1.08</div>
+            </div>
+            <div className="space-y-2 lg:pl-4 xl:pl-6">
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Spend vs. Benchmark</div>
+              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">$1,080 / $950</div>
+            </div>
+            <div className="space-y-2 lg:pl-4 xl:pl-6">
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">In Patient / 1,000</div>
+              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">58.5</div>
+            </div>
+            <div className="space-y-2 lg:pl-4 xl:pl-6">
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Emergency Dept / 1,000</div>
+              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">520</div>
+            </div>
           </div>
         </div>
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-2 text-green-600 mb-2">
-              <DollarSign className="w-5 h-5" />
-              <span className="text-sm font-medium">Estimated Savings</span>
-            </div>
-            <div className="text-3xl font-light">{selectedRec.estimatedSavings ? formatCurrency(selectedRec.estimatedSavings) : 'N/A'}</div>
-          </div>
-          <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-2 text-blue-600 mb-2">
-              <Users className="w-5 h-5" />
-              <span className="text-sm font-medium">Affected Patients</span>
-            </div>
-            <div className="text-3xl font-light">{selectedRec.affectedLives ? formatNumber(selectedRec.affectedLives) : 'N/A'}</div>
-          </div>
-          <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
-            <div className="text-sm font-medium text-gray-600 mb-2">Complexity</div>
-            <div className="text-3xl font-light capitalize">{selectedRec.implementationComplexity || 'N/A'}</div>
-          </div>
-        </div>
-
-        {/* Description */}
+        {/* Overview with Status */}
         <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
-          <h2 className="text-2xl font-light mb-4">Overview</h2>
-          <p className="text-gray-700 leading-relaxed">{selectedRec.description}</p>
-          {selectedRec.programOverview && (
-            <p className="text-gray-700 leading-relaxed mt-4">{selectedRec.programOverview}</p>
-          )}
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <h2 className="text-2xl font-light">Overview</h2>
+            <div className="flex-shrink-0">
+              <label className="text-sm font-medium text-gray-600 block mb-2">Status</label>
+              <select
+                value={selectedRec.status}
+                onChange={async (e) => {
+                  const newStatus = e.target.value as 'not_started' | 'accepted' | 'rejected' | 'already_doing';
+                  try {
+                    // Update the database
+                    const response = await fetch(`/api/recommendations?id=${selectedRec.id}`, {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ status: newStatus })
+                    });
+
+                    if (!response.ok) {
+                      throw new Error('Failed to update status');
+                    }
+
+                    // Update local state
+                    setSelectedRec({ ...selectedRec, status: newStatus });
+
+                    // Also update the list data if it exists
+                    if (data) {
+                      setData({
+                        ...data,
+                        recommendations: data.recommendations.map(rec =>
+                          rec.id === selectedRec.id ? { ...rec, status: newStatus } : rec
+                        )
+                      });
+                    }
+                  } catch (error) {
+                    console.error('Error updating status:', error);
+                    alert('Failed to update status. Please try again.');
+                  }
+                }}
+                className={`px-4 py-2 rounded-lg border font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#FFD85F] ${getStatusColor(selectedRec.status)}`}
+              >
+                <option value="not_started">Not Started</option>
+                <option value="accepted">Accepted</option>
+                <option value="rejected">Rejected</option>
+                <option value="already_doing">Already Doing</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* Text Content - 2 columns */}
+            <div className="lg:col-span-2 space-y-4">
+              <p className="text-gray-700 leading-relaxed text-base">{selectedRec.description}</p>
+              {selectedRec.programOverview && (
+                <div className="space-y-4">
+                  {selectedRec.programOverview.split('\n\n').map((paragraph, index) => (
+                    <p key={index} className="text-gray-700 leading-relaxed text-base">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Image - 1 column */}
+            <div className="lg:col-span-1">
+              <div className="rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 to-green-50 p-4 h-full flex items-center justify-center">
+                <img
+                  src={`/care-management-illustration.png?v=${Date.now()}`}
+                  alt="Care Management Illustration"
+                  className="w-full h-auto object-contain rounded-lg"
+                  onError={(e) => {
+                    // Fallback to a placeholder if image doesn't load
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Affected Cost Categories */}

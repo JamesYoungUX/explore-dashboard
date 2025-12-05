@@ -39,6 +39,11 @@ export default async function handler(req, res) {
     return handlePatch(req, res);
   }
 
+  // Handle PUT requests (same as PATCH but with ID in query params)
+  if (req.method === 'PUT') {
+    return handlePut(req, res);
+  }
+
   return res.status(405).json({ error: 'Method not allowed' });
 }
 
@@ -306,6 +311,63 @@ async function handlePatch(req, res) {
       return res.status(400).json({
         error: 'Bad Request',
         message: 'Status is required'
+      });
+    }
+
+    // Validate status
+    const validStatuses = ['not_started', 'acknowledged', 'accepted', 'rejected', 'already_doing', 'in_progress', 'completed'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: `Invalid status. Must be one of: ${validStatuses.join(', ')}`
+      });
+    }
+
+    // Update the recommendation status
+    const result = await sql`
+      UPDATE recommendations
+      SET
+        status = ${status},
+        status_changed_at = NOW(),
+        updated_at = NOW()
+      WHERE id = ${id}
+      RETURNING id, status, status_changed_at as "statusChangedAt", updated_at as "updatedAt"
+    `;
+
+    if (result.length === 0) {
+      return notFound(res, 'Recommendation');
+    }
+
+    return res.status(200).json({
+      success: true,
+      recommendation: result[0]
+    });
+
+  } catch (error) {
+    return handleError(res, error, 'update recommendation status');
+  }
+}
+
+/**
+ * Handle PUT requests to update recommendation status (ID from query params)
+ */
+async function handlePut(req, res) {
+  try {
+    const sql = getDb();
+    const { id } = req.query;
+    const { status } = req.body;
+
+    if (!id) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'Recommendation ID is required in query params'
+      });
+    }
+
+    if (!status) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'Status is required in request body'
       });
     }
 

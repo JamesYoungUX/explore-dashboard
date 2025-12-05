@@ -16,7 +16,7 @@ async function seedDatabase() {
         console.log('🌱 Seeding database with full dataset...\n');
 
         // Read and execute the seed file line by line using template literals
-        const seedFile = readFileSync(join(__dirname, 'seed-new-data.sql'), 'utf8');
+        const seedFile = readFileSync(join(__dirname, 'seed-v2.sql'), 'utf8');
 
         // Execute the entire file as one transaction
         await sql.unsafe(seedFile);

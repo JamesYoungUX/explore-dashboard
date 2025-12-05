@@ -195,7 +195,11 @@ INSERT INTO recommendations (
   350000, 39, 'medium',
   'High need patients', 39,
   true,
-  'This care management program identifies high-risk patients prone to avoidable admissions and provides intensive care coordination, including regular check-ins, medication management, and care plan development.',
+  'Care management programs are evidence-based interventions designed to improve health outcomes for high-risk patients while reducing unnecessary healthcare utilization. These programs identify patients with complex medical needs, multiple chronic conditions, or frequent hospital admissions and provide them with dedicated care coordinators who serve as their primary point of contact for healthcare navigation.
+
+The core components of an effective care management program include comprehensive health assessments, personalized care planning, medication reconciliation and management, care coordination across providers, patient education and self-management support, and 24/7 access to clinical support. Care coordinators work closely with patients and their families to address barriers to care, ensure follow-up appointments are scheduled and attended, and facilitate communication between specialists and primary care providers.
+
+Research demonstrates that well-implemented care management programs can reduce hospital readmissions by 20-30%, decrease emergency department visits by 15-25%, and improve patient satisfaction scores while generating significant cost savings. The key to success lies in targeting the right patient population, maintaining appropriate care coordinator-to-patient ratios (typically 1:40-50 for high-risk patients), and ensuring strong integration with the broader care team including physicians, specialists, and community resources.',
   null,
   true, 'care_management'),
 
@@ -215,7 +219,11 @@ INSERT INTO recommendations (
   65900, 148, 'medium',
   'Post-acute rehab candidates', 148,
   true,
-  'This program establishes partnerships with top discharging hospitals to create standardized discharge planning protocols.',
+  'Standardized discharge planning protocols are critical interventions that ensure patients receive the most appropriate post-acute care setting based on their clinical needs, functional status, and home support systems. These protocols involve collaboration between hospital discharge planners, rehabilitation specialists, and care coordinators to assess each patient''s readiness for different levels of care and identify opportunities for home-based rehabilitation when clinically appropriate.
+
+Effective discharge planning programs establish clear criteria for determining when patients can safely receive rehabilitation services at home versus requiring facility-based care. This includes comprehensive assessments of mobility, activities of daily living, cognitive function, caregiver availability, and home environment safety. By implementing evidence-based screening tools and decision algorithms, healthcare organizations can reduce unnecessary admissions to inpatient rehabilitation facilities while ensuring patients still receive the intensive therapy they need.
+
+Research shows that well-designed discharge planning protocols can reduce inappropriate IRF admissions by 25-35% while maintaining or improving patient outcomes. Key success factors include early identification of post-acute care needs (ideally within 24 hours of admission), strong partnerships with discharging hospitals, availability of robust home health services, and ongoing monitoring to ensure patients are progressing appropriately in their chosen care setting.',
   null,
   true, 'care_coordination'),
 
@@ -259,8 +267,10 @@ INSERT INTO recommendation_cost_categories (recommendation_id, cost_category_id,
 -- GUIDE program (#2) → Inpatient Medical
 (2, (SELECT id FROM cost_categories WHERE slug = 'inpatient-medical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 73000),
 
--- Discharge planning (#3) → Acute Rehab
+-- Discharge planning (#3) → Acute Rehab, IP Medical, ED
 (3, (SELECT id FROM cost_categories WHERE slug = 'acute-rehab' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 65900),
+(3, (SELECT id FROM cost_categories WHERE slug = 'inpatient-medical' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 25000),
+(3, (SELECT id FROM cost_categories WHERE slug = 'ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 18000),
 
 -- Urgent care (#4) → ED Visits
 (4, (SELECT id FROM cost_categories WHERE slug = 'ed-visits' AND period_id = (SELECT id FROM performance_periods WHERE period_key = 'ytd')), 24000),
