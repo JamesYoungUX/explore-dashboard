@@ -3,6 +3,7 @@ import DashboardOverview from './components/dashboard/DashboardOverview';
 import CostPerformanceInsights from './components/dashboard/CostPerformanceInsights';
 import CostSavingDeepDive from './components/dashboard/CostSavingDeepDive';
 import CategoryDrilldown from './components/dashboard/CategoryDrilldown';
+import RecommendationDetail from './components/dashboard/RecommendationDetail';
 import Recommendations from './components/dashboard/Recommendations';
 import ProgressTracking from './components/dashboard/ProgressTracking';
 import Settings from './components/dashboard/Settings';
@@ -24,6 +25,7 @@ function App() {
   const [activeView, setActiveView] = useState<ProblemArea | 'overview'>('cost-performance-insights');
   const [navigationHistory, setNavigationHistory] = useState<(ProblemArea | 'overview')[]>(['cost-performance-insights']);
   const [recommendationId, setRecommendationId] = useState<number | null>(null);
+  const [categoryName, setCategoryName] = useState<string | null>(null);
 
   // Page visibility settings (default off)
   const [pageVisibility, setPageVisibility] = useState(() => {
@@ -35,10 +37,11 @@ function App() {
   });
 
   // Custom navigation function that tracks history
-  const navigateTo = (view: ProblemArea | 'overview', recId?: number) => {
+  const navigateTo = (view: ProblemArea | 'overview', recId?: number, catName?: string) => {
     setNavigationHistory(prev => [...prev, view]);
     setActiveView(view);
     setRecommendationId(recId ?? null);
+    if (catName) setCategoryName(catName);
   };
 
   // Go back function
@@ -70,10 +73,12 @@ function App() {
       'outpatient-surgery', 'emergency-dept'
     ];
     if (categorySlugs.includes(activeView as string)) {
-      return <CategoryDrilldown categorySlug={activeView as string} onBack={goBack} />;
+      return <CategoryDrilldown categorySlug={activeView as string} onBack={goBack} onNavigateToRecommendation={(recId, catName) => navigateTo('recommendation-detail', recId, catName)} />;
     }
 
     switch (activeView) {
+      case 'recommendation-detail':
+        return <RecommendationDetail recommendationId={recommendationId || 0} categoryName={categoryName || undefined} onBack={goBack} />;
       case 'cost-performance-insights':
         return <CostPerformanceInsights onNavigate={navigateTo} />;
       case 'cost-categories':

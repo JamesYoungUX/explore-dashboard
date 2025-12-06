@@ -87,6 +87,7 @@ export type ProblemArea =
   | 'cost-performance-insights'
   | 'cost-categories'
   | 'recommendations'
+  | 'recommendation-detail'
   | 'progress-tracking'
   | 'settings'
   | 'chosen-initiatives'
@@ -140,6 +141,7 @@ export interface CostCategory {
   spendingPmpmBenchmark: number;            // Benchmark spending PMPM
   spendingVarianceAmount?: number;          // Dollar variance
   spendingVariancePercent?: number;         // Percent variance (22% above)
+  trendPercent?: number;                    // YTD trend (-34% to +8%, negative = improving)
 
   // Utilization Metrics
   utilizationActual: number;                // Admits/K, Visits/K, etc.
