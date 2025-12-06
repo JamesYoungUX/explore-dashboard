@@ -116,17 +116,17 @@ INSERT INTO cost_categories (
 ('preventive-care', 'Preventive Care', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
   47.20, 52.00, -73056, -3.1, 2.6,
   2.8, 3.1, -9.7, 'services_per_member',
-  'green', false, true, 6, 20, '3.1% below benchmark', 11),
+  'green', false, false, 6, 20, '3.1% below benchmark', 11),
 
 ('generic-drugs', 'Generic Drugs', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
   105.73, 108.00, -31960, -2.1, -5.1,
   85.2, 78.5, 8.5, 'percent_generic',
-  'green', false, true, 2, 20, '2.1% below benchmark', 12),
+  'green', false, false, 2, 20, '2.1% below benchmark', 12),
 
 ('primary-care', 'Primary Care', (SELECT id FROM performance_periods WHERE period_key = 'ytd'),
   206.01, 210.00, -60730, -1.9, 1.8,
   4.2, 4.5, -6.7, 'visits_per_member',
-  'green', false, true, 8, 20, '1.9% below benchmark', 13),
+  'green', false, false, 8, 20, '1.9% below benchmark', 13),
 
 -- ============================================================================
 -- COST CATEGORIES for Last 12 Months
@@ -173,12 +173,12 @@ INSERT INTO cost_categories (
 ('generic-drugs', 'Generic Drugs', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
   105.73, 108.00, -31960, -2.1, -5.1,
   83.5, 78.5, 6.4, 'percent_generic',
-  'green', false, true, 2, 20, '2.1% below benchmark', 8),
+  'green', false, false, 2, 20, '2.1% below benchmark', 8),
 
 ('primary-care', 'Primary Care', (SELECT id FROM performance_periods WHERE period_key = 'last_12_months'),
   206.01, 210.00, -60730, -1.9, 1.8,
   4.3, 4.5, -4.4, 'visits_per_member',
-  'green', false, true, 8, 20, '1.9% below benchmark', 9),
+  'green', false, false, 8, 20, '1.9% below benchmark', 9),
 
 -- ============================================================================
 -- COST CATEGORIES for Last Quarter
@@ -225,12 +225,12 @@ INSERT INTO cost_categories (
 ('generic-drugs', 'Generic Drugs', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
   105.73, 108.00, -31960, -2.1, -5.1,
   84.0, 78.5, 7.0, 'percent_generic',
-  'green', false, true, 2, 20, '2.1% below benchmark', 8),
+  'green', false, false, 2, 20, '2.1% below benchmark', 8),
 
 ('primary-care', 'Primary Care', (SELECT id FROM performance_periods WHERE period_key = 'last_quarter'),
   206.01, 210.00, -60730, -1.9, 1.8,
   4.25, 4.5, -5.6, 'visits_per_member',
-  'green', false, true, 8, 20, '1.9% below benchmark', 9);
+  'green', false, false, 8, 20, '1.9% below benchmark', 9);
 
 -- ============================================================================
 -- RECOMMENDATIONS
