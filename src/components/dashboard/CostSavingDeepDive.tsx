@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, AlertCircle, CheckCircle, ChevronRight } from 'lucide-react';
+import { TrendingUp, ChevronRight, AlertCircle } from 'lucide-react';
 import type { CostCategory, PerformancePeriod } from '../../types';
 
 interface Props {
@@ -13,6 +13,7 @@ interface CostCategoriesResponse {
 
 export default function CostSavingDeepDive({ onNavigate }: Props) {
   const [data, setData] = useState<CostCategoriesResponse | null>(null);
+  const [allCategories, setAllCategories] = useState<CostCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
@@ -39,6 +40,23 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
 
       const result = await response.json();
       setData(result);
+
+      // Also fetch all categories (unfiltered) for banner calculation
+      if (statusFilter) {
+        const allParams = new URLSearchParams();
+        allParams.append('periodKey', selectedPeriod);
+        const allResponse = await fetch(`/api/cost-categories?${allParams.toString()}`);
+        if (allResponse.ok) {
+          const allResult = await allResponse.json();
+          setAllCategories(allResult.categories);
+          console.log('Fetched all categories (filtered view):', allResult.categories.length);
+        }
+      } else {
+        setAllCategories(result.categories);
+        console.log('Set all categories (unfiltered view):', result.categories.length);
+        const aboveBenchmark = result.categories.filter((cat: any) => cat.spendingVarianceAmount > 0);
+        console.log('Categories above benchmark:', aboveBenchmark.length, aboveBenchmark.map((c: any) => c.categoryName));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Error fetching cost categories:', err);
@@ -72,36 +90,25 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
     return `${num >= 0 ? '+' : ''}${num.toFixed(1)}%`;
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'red': return 'bg-red-500';
-      case 'yellow': return 'bg-amber-500';
-      case 'green': return 'bg-green-500';
-      default: return 'bg-gray-500';
+  const getVarianceColor = (variance: number) => {
+    const absVariance = Math.abs(variance);
+
+    // Watch items: within ±3% of benchmark
+    if (absVariance <= 3) {
+      return 'amber'; // Watch
     }
-  };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'red': return 'Priority';
-      case 'yellow': return 'Watch';
-      case 'green': return 'Performing Well';
-      default: return 'Unknown';
+    // Priority (overspending): more than +3% above benchmark
+    if (variance > 3) {
+      return 'red'; // Priority
     }
-  };
 
-  const getVarianceColor = (variance: number | string) => {
-    const num = typeof variance === 'string' ? parseFloat(variance) : variance;
-    if (num > 0) return 'text-red-600';
-    if (num < 0) return 'text-green-600';
-    return 'text-gray-600';
-  };
+    // Performing well (underspending): more than -3% below benchmark
+    if (variance < -3) {
+      return 'green';
+    }
 
-  const getVarianceIcon = (variance: number | string) => {
-    const num = typeof variance === 'string' ? parseFloat(variance) : variance;
-    if (num > 0) return <TrendingUp className="w-4 h-4" />;
-    if (num < 0) return <TrendingDown className="w-4 h-4" />;
-    return null;
+    return 'gray';
   };
 
   if (loading) {
@@ -136,7 +143,7 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light">Cost Savings Breakout</h1>
-          <p className="text-sm text-gray-500 mt-2">All Data Risk Adjusted</p>
+          <p className="text-sm text-gray-500 italic">All data risk-adjusted</p>
         </div>
 
         {/* Period Filter */}
@@ -154,6 +161,79 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
             </select>
           </div>
           <span className="text-xs text-gray-700 font-normal">{data.period.periodLabel}</span>
+        </div>
+      </div>
+
+      {/* Summary Banner */}
+      <div className="bg-red-500/10 backdrop-blur-lg border border-red-500/30 rounded-xl p-6 shadow-lg">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <div className="text-3xl font-bold text-red-900">
+              {(() => {
+                const aboveBenchmark = allCategories.filter(cat =>
+                  cat.spendingVariancePercent !== null &&
+                  cat.spendingVariancePercent !== undefined &&
+                  cat.spendingVariancePercent > 0
+                );
+                console.log('Banner % calc - categories:', aboveBenchmark.map(c => ({ name: c.categoryName, percent: c.spendingVariancePercent })));
+                if (aboveBenchmark.length === 0) return 'At benchmark';
+                const avgPercent = aboveBenchmark.reduce((sum, cat) => {
+                  const percent = typeof cat.spendingVariancePercent === 'string'
+                    ? parseFloat(cat.spendingVariancePercent)
+                    : cat.spendingVariancePercent;
+                  return sum + (percent || 0);
+                }, 0) / aboveBenchmark.length;
+                console.log('Banner % calc - average:', avgPercent);
+                return `${avgPercent.toFixed(1)}% above benchmark`;
+              })()}
+            </div>
+            <div className="text-sm text-red-700 mt-2 font-medium">#7 in ACO on cost control</div>
+          </div>
+          <div className="text-right">
+            <div className="flex items-baseline gap-3 justify-end">
+              <div className="text-3xl font-bold text-red-900">
+                {(() => {
+                  const filtered = allCategories.filter(cat =>
+                    cat.spendingVarianceAmount !== null &&
+                    cat.spendingVarianceAmount !== undefined &&
+                    cat.spendingVarianceAmount > 0
+                  );
+
+                  const totalAboveBenchmark = filtered.reduce((sum, cat) => {
+                    const amount = typeof cat.spendingVarianceAmount === 'string'
+                      ? parseFloat(cat.spendingVarianceAmount)
+                      : cat.spendingVarianceAmount;
+                    return sum + (amount || 0);
+                  }, 0);
+
+                  return formatCurrency(totalAboveBenchmark);
+                })()}
+              </div>
+              <div className="flex items-center gap-1 text-red-600">
+                <span className="text-lg font-semibold">
+                  {(() => {
+                    const aboveBenchmark = allCategories.filter(cat =>
+                      cat.trendPercent !== null &&
+                      cat.trendPercent !== undefined &&
+                      cat.spendingVarianceAmount !== null &&
+                      cat.spendingVarianceAmount !== undefined &&
+                      cat.spendingVarianceAmount > 0
+                    );
+                    if (aboveBenchmark.length === 0) return '+0.0%';
+                    const avgTrend = aboveBenchmark.reduce((sum, cat) => {
+                      const trend = typeof cat.trendPercent === 'string'
+                        ? parseFloat(cat.trendPercent)
+                        : cat.trendPercent;
+                      return sum + (trend || 0);
+                    }, 0) / aboveBenchmark.length;
+                    return `${avgTrend >= 0 ? '+' : ''}${avgTrend.toFixed(1)}%`;
+                  })()}
+                </span>
+                <TrendingUp className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="text-sm text-red-700 mt-1">above benchmark spending</div>
+          </div>
         </div>
       </div>
 
@@ -199,106 +279,124 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
         {data.categories.map((category) => (
           <div
             key={category.id}
-            className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200"
             onClick={() => onNavigate && onNavigate(category.slug)}
           >
-            {/* Header */}
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className={`w-4 h-4 rounded-full ${getStatusColor(category.performanceStatus)}`} />
-                <div>
-                  <h3 className="text-xl font-medium">{category.categoryName}</h3>
-                  <p className="text-sm text-gray-500 mt-1">{category.description}</p>
+            {/* Category Name */}
+            <h3 className="text-2xl font-bold text-gray-900 mb-6">{category.categoryName}</h3>
+
+            <div className="flex items-center justify-between gap-8">
+              {/* Left: PMPM and Utilization */}
+              <div className="flex gap-12 flex-1">
+                {/* PMPM Section */}
+                <div className="flex-1">
+                  <div className="text-sm font-semibold text-gray-700 mb-3">PMPM</div>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <div className="text-xs text-gray-500 mb-1">Benchmark</div>
+                      <div className="text-lg font-medium text-gray-900">{formatCurrency(category.spendingPmpmBenchmark)}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 mb-1">Actual</div>
+                      <div className={`text-lg font-bold ${(category.spendingVariancePercent ?? 0) > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {formatCurrency(category.spendingPmpmActual)}
+                        {category.spendingVariancePercent !== null && category.spendingVariancePercent !== undefined && (
+                          <span className="ml-2 text-sm">({formatPercent(category.spendingVariancePercent)})</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Utilization Section */}
+                <div className="flex-1">
+                  <div className="text-sm font-semibold text-gray-700 mb-3">
+                    {category.utilizationUnit ? category.utilizationUnit.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Utilization'}
+                  </div>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <div className="text-xs text-gray-500 mb-1">Benchmark</div>
+                      <div className="text-lg font-medium text-gray-900">{formatNumber(category.utilizationBenchmark)}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-gray-500 mb-1">Actual</div>
+                      <div className={`text-lg font-bold ${(category.utilizationVariancePercent ?? 0) > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                        {formatNumber(category.utilizationActual)}
+                        {category.utilizationVariancePercent !== null && category.utilizationVariancePercent !== undefined && (
+                          <span className="ml-2 text-sm">({formatPercent(category.utilizationVariancePercent)})</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+
+              {/* Vertical Divider */}
+              <div className="h-24 w-px bg-gray-300"></div>
+
+              {/* Right: Variance Summary and Explore */}
+              <div className="flex flex-col items-end justify-between h-24 min-w-[280px]">
                 <div className="text-right">
-                  <div className="text-xs text-gray-500">Status</div>
-                  <div className="text-sm font-medium">{getStatusLabel(category.performanceStatus)}</div>
-                </div>
-                {category.acoRank && category.totalCategories && (
-                  <div className="text-right">
-                    <div className="text-xs text-gray-500">ACO Rank</div>
-                    <div className="text-sm font-medium">{category.acoRank} of {category.totalCategories}</div>
+                  <div className="flex items-center gap-2 justify-end">
+                    {(() => {
+                      const variance = category.spendingVariancePercent ?? 0;
+                      const color = getVarianceColor(variance);
+                      const colorClasses = {
+                        red: 'text-red-900',
+                        amber: 'text-amber-900',
+                        green: 'text-green-900',
+                        gray: 'text-gray-900'
+                      };
+
+                      return (
+                        <>
+                          <div className={`text-3xl font-bold ${colorClasses[color]}`}>
+                            {category.spendingVarianceAmount !== null && category.spendingVarianceAmount !== undefined
+                              ? formatCurrency(Math.abs(category.spendingVarianceAmount))
+                              : '$0'}
+                          </div>
+                          {category.trendPercent !== null && category.trendPercent !== undefined && (
+                            <div className={`flex items-center gap-1 ${category.trendPercent < 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              <span className="text-lg font-semibold">{formatPercent(category.trendPercent)}</span>
+                              <TrendingUp className={`w-5 h-5 ${category.trendPercent < 0 ? 'rotate-180' : ''}`} />
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                   </div>
-                )}
-                <ChevronRight className="w-6 h-6 text-gray-400" />
+                  <div className="flex items-center gap-2 justify-end mt-1">
+                    {(() => {
+                      const variance = category.spendingVariancePercent ?? 0;
+                      const color = getVarianceColor(variance);
+
+                      if (color === 'amber') {
+                        return (
+                          <>
+                            <span className="px-2.5 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded uppercase tracking-wide border border-amber-300">
+                              WATCH
+                            </span>
+                            <span className="text-sm text-gray-600">
+                              ±3% of benchmark
+                            </span>
+                          </>
+                        );
+                      }
+
+                      return (
+                        <span className="text-sm text-gray-600">
+                          {variance > 0 ? 'above benchmark spending' : 'below benchmark spending'}
+                        </span>
+                      );
+                    })()}
+                  </div>
+                </div>
+                <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors">
+                  Explore
+                  <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
-
-            {/* Spending and Utilization Side-by-Side */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Spending Section */}
-              <div className="space-y-3">
-                <div className="text-sm font-medium text-gray-700 uppercase tracking-wide">Spending (PMPM)</div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Actual</div>
-                    <div className="text-2xl font-light">{formatCurrency(category.spendingPmpmActual)}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Benchmark</div>
-                    <div className="text-2xl font-light text-gray-600">{formatCurrency(category.spendingPmpmBenchmark)}</div>
-                  </div>
-                </div>
-
-                {category.spendingVariancePercent !== null && category.spendingVariancePercent !== undefined && (
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-600">Variance vs Benchmark</span>
-                    <div className={`flex items-center gap-2 font-semibold ${getVarianceColor(category.spendingVariancePercent)}`}>
-                      {getVarianceIcon(category.spendingVariancePercent)}
-                      <span>{formatPercent(category.spendingVariancePercent)}</span>
-                      {category.spendingVarianceAmount !== null && category.spendingVarianceAmount !== undefined && (
-                        <span className="text-sm">({formatCurrency(Math.abs(category.spendingVarianceAmount))})</span>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Utilization Section */}
-              <div className="space-y-3">
-                <div className="text-sm font-medium text-gray-700 uppercase tracking-wide">
-                  Utilization {category.utilizationUnit && `(${category.utilizationUnit.replace(/_/g, ' ')})`}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Actual</div>
-                    <div className="text-2xl font-light">{formatNumber(category.utilizationActual)}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Benchmark</div>
-                    <div className="text-2xl font-light text-gray-600">{formatNumber(category.utilizationBenchmark)}</div>
-                  </div>
-                </div>
-
-                {category.utilizationVariancePercent !== null && category.utilizationVariancePercent !== undefined && (
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-600">Variance vs Benchmark</span>
-                    <div className={`flex items-center gap-2 font-semibold ${getVarianceColor(category.utilizationVariancePercent)}`}>
-                      {getVarianceIcon(category.utilizationVariancePercent)}
-                      <span>{formatPercent(category.utilizationVariancePercent)}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Insight Badge */}
-            {category.isOpportunity && (
-              <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-red-50 border border-red-200 rounded-lg text-sm">
-                <AlertCircle className="w-4 h-4 text-red-600" />
-                <span className="text-red-800 font-medium">Cost Savings Opportunity</span>
-              </div>
-            )}
-            {category.isStrength && (
-              <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-lg text-sm">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span className="text-green-800 font-medium">Performing Efficiently</span>
-              </div>
-            )}
           </div>
         ))}
       </div>
