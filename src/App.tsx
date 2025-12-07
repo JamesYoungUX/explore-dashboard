@@ -68,9 +68,9 @@ function App() {
     // Handle category drill-down (e.g., 'acute-rehab', 'specialty-drugs')
     // Check if we're viewing a cost category detail by checking against known category slugs
     const categorySlugs = [
-      'acute-rehab', 'specialty-drugs', 'primary-care', 'generic-drugs',
-      'preventive-care', 'skilled-nursing', 'home-health', 'inpatient-medical',
-      'outpatient-surgery', 'emergency-dept'
+      'acute-rehab', 'avoidable-ed-visits', 'generic-drugs', 'inpatient-medical',
+      'ip-surgical', 'lab-services', 'op-radiology', 'op-surgical',
+      'preventive-care', 'primary-care', 'radiology', 'skilled-nursing'
     ];
     if (categorySlugs.includes(activeView as string)) {
       return <CategoryDrilldown categorySlug={activeView as string} onBack={goBack} onNavigateToRecommendation={(recId, catName) => navigateTo('recommendation-detail', recId, catName)} />;

@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 async function handleGet(req, res) {
   try {
     const sql = getDb();
-    const { id, status, priority } = req.query;
+    const { id, status, priority, categoryName } = req.query;
 
     // GET /api/recommendations?id=123 - Get specific recommendation with full details
     if (id) {
@@ -104,6 +104,14 @@ async function handleGet(req, res) {
         ORDER BY rcc.impact_amount DESC NULLS LAST
       `;
       recommendation.affectedCategories = categories;
+
+      // If categoryName is provided, set impactAmount to the specific category's impact
+      if (categoryName) {
+        const matchingCategory = categories.find(cat => cat.categoryName === categoryName);
+        if (matchingCategory) {
+          recommendation.impactAmount = matchingCategory.impactAmount;
+        }
+      }
 
       // Get program resources if available
       if (recommendation.hasProgramDetails) {

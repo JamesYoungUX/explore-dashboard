@@ -75,9 +75,27 @@
 
 ---
 
+### 4. **Empty Category Detail Pages**
+**Files:** Database tables, CategoryDrilldown component  
+**Severity:** Medium - Missing data
+
+**Problem:**
+- Only Acute Rehab has detail data (recommendations, hospitals, DRGs)
+- Other categories (OP Surgical, IP Surgical, etc.) show empty pages when clicked
+- No fallback UI or message when category has no data
+
+**Solution:**
+- Option 1: Add "No data available" message in CategoryDrilldown when sections are empty
+- Option 2: Populate sample data for other categories (recommendations, hospitals, DRGs)
+- Option 3: Disable Explore button for categories without detail data
+
+**Impact:** Better UX, prevents confusion when users click on empty categories
+
+---
+
 ## 🟡 Medium Priority Issues
 
-### 4. **Inconsistent Loading States**
+### 5. **Inconsistent Loading States**
 **Files:** `CareGaps.tsx`, other workflow components  
 **Severity:** Medium - UX inconsistency
 
@@ -285,6 +303,41 @@ fill: '#DC2626'  // Should use Tailwind color
 - Implement proper migration system
 - Version all schema changes
 - Update seed data to match current UI
+
+---
+
+### 14. **Inconsistent Date Calculation Methods**
+**Files:** `api/_lib/periods.js`, `DashboardOverview.tsx`, multiple components  
+**Severity:** Medium - Technical debt
+
+**Problem:**
+- Different components calculate dates differently:
+  - `DashboardOverview.tsx`: Client-side calculation using `new Date()` 
+  - Other components: Server-side calculation from API using `periods.js`
+- Date parsing inconsistency caused timezone bugs:
+  - `new Date("2025-12-07")` parses as UTC midnight → converts to Dec 6 in Eastern Time
+  - Fixed with manual parsing: `new Date(year, month - 1, day)` to create local dates
+- Three different date display implementations across components
+
+**Current Workarounds:**
+- Server uses UTC methods (`getUTCFullYear`, `getUTCMonth`, `getUTCDate`)
+- Frontend manually parses date strings to avoid timezone conversion
+- Each component has duplicate date parsing logic
+
+**Solution:**
+- Create a centralized date utility module (`src/utils/dates.ts`)
+- Single function for parsing API date strings: `parseApiDate(dateString)`
+- Single function for formatting dates: `formatDateRange(start, end)`
+- All components should use the same utility functions
+- Consider using a date library like `date-fns` for consistency
+
+**Files to Refactor:**
+- `src/components/dashboard/CostPerformanceInsights.tsx` (lines 165-173)
+- `src/components/dashboard/CostSavingDeepDive.tsx` (lines 167-176)
+- `src/components/dashboard/CategoryDrilldown.tsx` (lines 146-156)
+- `src/components/dashboard/DashboardOverview.tsx` (lines 14-35)
+
+**Impact:** Better maintainability, consistent behavior, easier debugging
 
 ---
 

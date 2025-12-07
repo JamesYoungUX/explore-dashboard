@@ -180,6 +180,7 @@ export interface Recommendation {
 
   // Impact Metrics
   estimatedSavings?: number;
+  impactAmount?: number;                    // Category-specific impact (when viewing from category detail)
   affectedLives?: number;
   implementationComplexity?: 'low' | 'medium' | 'high';
 

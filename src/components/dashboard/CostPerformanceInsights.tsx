@@ -12,28 +12,6 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState('ytd');
 
-  const getDateRange = (period: string) => {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-
-    switch (period) {
-      case 'ytd':
-        return `Jan 1, ${currentYear} - ${today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-      case 'last_12_months':
-        const last12Start = new Date(today);
-        last12Start.setMonth(today.getMonth() - 12);
-        return `${last12Start.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-      case 'last_quarter':
-        const quarter = Math.floor(today.getMonth() / 3);
-        const lastQuarter = quarter === 0 ? 3 : quarter - 1;
-        const lastQuarterYear = quarter === 0 ? currentYear - 1 : currentYear;
-        const quarterStart = new Date(lastQuarterYear, lastQuarter * 3, 1);
-        const quarterEnd = new Date(lastQuarterYear, (lastQuarter + 1) * 3, 0);
-        return `${quarterStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${quarterEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
-      default:
-        return '';
-    }
-  };
 
   useEffect(() => {
     fetchData();
@@ -43,7 +21,10 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`/api/performance-insights?periodKey=${selectedPeriod}`);
+      const response = await fetch(`/api/performance-insights?periodKey=${selectedPeriod}`, {
+        cache: 'no-store'
+      });
+
 
       if (!response.ok) {
         throw new Error('Failed to fetch performance insights');
@@ -163,7 +144,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 lg:gap-6">
         <div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl 2xl:text-6xl font-light">Cost Performance Insights</h1>
-          <p className="text-sm lg:text-base text-gray-500 mt-2">All Data Risk Adjusted</p>
+          <p className="text-sm text-gray-500 italic">All data risk-adjusted</p>
         </div>
 
         {/* Period Filter */}
@@ -180,7 +161,18 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
               <option value="last_quarter">Last Quarter</option>
             </select>
           </div>
-          <span className="text-xs text-gray-700 font-normal">{getDateRange(selectedPeriod)}</span>
+          <span className="text-xs text-gray-700 font-normal">
+            {data.period.startDate && data.period.endDate ? (
+              (() => {
+                // Parse YYYY-MM-DD as local date to avoid timezone issues
+                const [startYear, startMonth, startDay] = data.period.startDate.split('-').map(Number);
+                const [endYear, endMonth, endDay] = data.period.endDate.split('-').map(Number);
+                const startDate = new Date(startYear, startMonth - 1, startDay);
+                const endDate = new Date(endYear, endMonth - 1, endDay);
+                return `${startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+              })()
+            ) : data.period.periodLabel}
+          </span>
         </div>
       </div>
 
@@ -208,13 +200,35 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                 {isCostSavings ? (
                   <div className="flex items-baseline gap-1 lg:gap-1.5">
                     <span className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light whitespace-nowrap">
-                      $750,000
+                      {(() => {
+                        const total = data.costOpportunities
+                          .filter(opp => opp.opportunityType === 'overspending')
+                          .reduce((sum, opp) => {
+                            const amount = typeof opp.amountVariance === 'string'
+                              ? parseFloat(opp.amountVariance)
+                              : opp.amountVariance;
+                            return sum + Math.abs(amount || 0);
+                          }, 0);
+                        return formatCurrency(total);
+                      })()}
                     </span>
                     <span className="text-sm lg:text-base xl:text-lg font-light text-gray-600 whitespace-nowrap">
-                      (15%)
+                      ({(() => {
+                        const opportunities = data.costOpportunities.filter(opp => opp.opportunityType === 'overspending');
+                        if (opportunities.length === 0) return '0';
+                        const avgPercent = opportunities.reduce((sum, opp) => {
+                          const percent = typeof opp.percentVariance === 'string'
+                            ? parseFloat(opp.percentVariance)
+                            : opp.percentVariance;
+                          return sum + Math.abs(percent || 0);
+                        }, 0) / opportunities.length;
+                        return avgPercent.toFixed(1);
+                      })()}%)
                     </span>
-                    <span className="text-sm lg:text-base font-medium text-green-600 whitespace-nowrap">
-                      -2.1%
+                    <span className={`text-sm lg:text-base font-medium whitespace-nowrap ${getPercentColor()}`}>
+                      {metric.changePercent !== null && metric.changePercent !== undefined
+                        ? formatPercent(metric.changePercent)
+                        : '+5.5%'}
                     </span>
                     {getTrendIcon(metric.changeDirection, metric.metricType)}
                   </div>
@@ -248,6 +262,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                 {data.costOpportunities
                   .filter(opp => opp.opportunityType === 'overspending')
                   .sort((a, b) => Math.abs(b.amountVariance || 0) - Math.abs(a.amountVariance || 0))
+                  .slice(0, 3)
                   .map((opp) => (
                     <div
                       key={opp.id}
@@ -291,6 +306,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                 {data.costOpportunities
                   .filter(opp => opp.opportunityType === 'efficient')
                   .sort((a, b) => Math.abs(b.amountVariance || 0) - Math.abs(a.amountVariance || 0))
+                  .slice(0, 3)
                   .map((opp) => (
                     <div
                       key={opp.id}
@@ -435,7 +451,7 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
         {/* Top Recommendations */}
         <div className="p-6 lg:p-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl lg:text-3xl 2xl:text-4xl font-light">Top Recommendations</h2>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-light">Top Recommendations</h1>
             <button
               onClick={() => onNavigate('recommendations' as ProblemArea)}
               className="text-sm lg:text-base text-gray-600 hover:text-900 transition-colors font-medium hover:underline"

@@ -32,7 +32,9 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
       params.append('periodKey', selectedPeriod);
       if (statusFilter) params.append('status', statusFilter);
 
-      const response = await fetch(`/api/cost-categories?${params.toString()}`);
+      const response = await fetch(`/api/cost-categories?${params.toString()}`, {
+        cache: 'no-store'
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch cost categories');
@@ -45,7 +47,9 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
       if (statusFilter) {
         const allParams = new URLSearchParams();
         allParams.append('periodKey', selectedPeriod);
-        const allResponse = await fetch(`/api/cost-categories?${allParams.toString()}`);
+        const allResponse = await fetch(`/api/cost-categories?${allParams.toString()}`, {
+          cache: 'no-store'
+        });
         if (allResponse.ok) {
           const allResult = await allResponse.json();
           setAllCategories(allResult.categories);
@@ -160,7 +164,18 @@ export default function CostSavingDeepDive({ onNavigate }: Props) {
               <option value="last_quarter">Last Quarter</option>
             </select>
           </div>
-          <span className="text-xs text-gray-700 font-normal">{data.period.periodLabel}</span>
+          <span className="text-xs text-gray-700 font-normal">
+            {data.period.startDate && data.period.endDate ? (
+              (() => {
+                // Parse YYYY-MM-DD as local date to avoid timezone issues
+                const [startYear, startMonth, startDay] = data.period.startDate.split('-').map(Number);
+                const [endYear, endMonth, endDay] = data.period.endDate.split('-').map(Number);
+                const startDate = new Date(startYear, startMonth - 1, startDay);
+                const endDate = new Date(endYear, endMonth - 1, endDay);
+                return `${startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+              })()
+            ) : data.period.periodLabel}
+          </span>
         </div>
       </div>
 

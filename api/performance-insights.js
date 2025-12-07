@@ -171,15 +171,9 @@ export default async function handler(req, res) {
       rec.affectedCategories = categories;
     }
 
-    // Format period for response
-    const formattedPeriod = {
-      id: period.id,
-      periodKey: period.period_key,
-      periodLabel: period.period_label,
-      startDate: period.start_date,
-      endDate: period.end_date,
-      isActive: period.is_active
-    };
+    // Format period for response with actual current dates
+    const { enhancePeriodWithActualDates } = await import('./_lib/periods.js');
+    const formattedPeriod = enhancePeriodWithActualDates(period);
 
     // Return combined response
     return res.status(200).json({

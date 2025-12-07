@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Info, ChevronRight } from 'lucide-react';
-import type { CostCategory, Recommendation } from '../../types';
+import type { CostCategory, Recommendation, PerformancePeriod } from '../../types';
 
 interface Props {
   categorySlug: string;
@@ -38,6 +38,7 @@ interface DischargingHospital {
 
 interface CategoryDetailResponse {
   category: CostCategory;
+  period: PerformancePeriod;
   recommendations: Recommendation[];
   hospitals: Hospital[];
   drgs: DRG[];
@@ -142,7 +143,18 @@ export default function CategoryDrilldown({ categorySlug, onBack, onNavigateToRe
               <option value="last_quarter">Last Quarter</option>
             </select>
           </div>
-          <span className="text-xs text-gray-600">1/1/2025 - 8/30/2025</span>
+          <span className="text-xs text-gray-700 font-normal">
+            {data?.period.startDate && data?.period.endDate ? (
+              (() => {
+                // Parse YYYY-MM-DD as local date to avoid timezone issues
+                const [startYear, startMonth, startDay] = data.period.startDate.split('-').map(Number);
+                const [endYear, endMonth, endDay] = data.period.endDate.split('-').map(Number);
+                const startDate = new Date(startYear, startMonth - 1, startDay);
+                const endDate = new Date(endYear, endMonth - 1, endDay);
+                return `${startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} - ${endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+              })()
+            ) : (data?.period.periodLabel || '')}
+          </span>
         </div>
       </div>
 
@@ -173,7 +185,7 @@ export default function CategoryDrilldown({ categorySlug, onBack, onNavigateToRe
                       <span className="font-medium">Cost area(s):</span>
                       {rec.affectedCategories && rec.affectedCategories.length > 0 ? (
                         <>
-                          {rec.affectedCategories.map((cat) => (
+                          {rec.affectedCategories.slice(0, 3).map((cat) => (
                             <button
                               key={cat.categoryId}
                               onClick={(e) => {
@@ -190,11 +202,15 @@ export default function CategoryDrilldown({ categorySlug, onBack, onNavigateToRe
                           {category.categoryName}
                         </button>
                       )}
-                      {rec.estimatedSavings && (
+                      {rec.impactAmount && (
                         <>
                           <span>totaling</span>
-                          <span className="font-semibold text-gray-900">{formatCurrency(rec.estimatedSavings)}</span>
-                          <span>(47%)</span>
+                          <span className="font-semibold text-gray-900">{formatCurrency(rec.impactAmount)}</span>
+                          {category.spendingVarianceAmount && (
+                            <span>
+                              ({Math.round((parseFloat(rec.impactAmount.toString()) / parseFloat(category.spendingVarianceAmount.toString())) * 100)}%)
+                            </span>
+                          )}
                         </>
                       )}
                       {rec.affectedLives && (

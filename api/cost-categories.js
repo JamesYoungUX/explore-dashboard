@@ -62,6 +62,7 @@ export default async function handler(req, res) {
           spending_pmpm_benchmark as "spendingPmpmBenchmark",
           spending_variance_amount as "spendingVarianceAmount",
           spending_variance_percent as "spendingVariancePercent",
+          trend_percent as "trendPercent",
           utilization_actual as "utilizationActual",
           utilization_benchmark as "utilizationBenchmark",
           utilization_variance_percent as "utilizationVariancePercent",
@@ -160,8 +161,28 @@ export default async function handler(req, res) {
         ORDER BY display_order ASC, discharges DESC
       `;
 
+      // Get affected categories for each recommendation
+      for (const rec of recommendations) {
+        const affectedCats = await sql`
+          SELECT
+            cc.id as "categoryId",
+            cc.category_name as "categoryName",
+            rcc.impact_amount as "impactAmount"
+          FROM recommendation_cost_categories rcc
+          JOIN cost_categories cc ON rcc.cost_category_id = cc.id
+          WHERE rcc.recommendation_id = ${rec.id}
+          ORDER BY rcc.impact_amount DESC NULLS LAST
+        `;
+        rec.affectedCategories = affectedCats;
+      }
+
+      // Format period with actual current dates
+      const { enhancePeriodWithActualDates } = await import('./_lib/periods.js');
+      const formattedPeriod = enhancePeriodWithActualDates(period);
+
       return res.status(200).json({
         category,
+        period: formattedPeriod,
         recommendations,
         hospitals: hospitals.length > 0 ? hospitals : undefined,
         drgs: drgs.length > 0 ? drgs : undefined,
@@ -180,6 +201,7 @@ export default async function handler(req, res) {
         spending_pmpm_benchmark as "spendingPmpmBenchmark",
         spending_variance_amount as "spendingVarianceAmount",
         spending_variance_percent as "spendingVariancePercent",
+        trend_percent as "trendPercent",
         utilization_actual as "utilizationActual",
         utilization_benchmark as "utilizationBenchmark",
         utilization_variance_percent as "utilizationVariancePercent",
@@ -207,6 +229,7 @@ export default async function handler(req, res) {
           spending_pmpm_benchmark as "spendingPmpmBenchmark",
           spending_variance_amount as "spendingVarianceAmount",
           spending_variance_percent as "spendingVariancePercent",
+          trend_percent as "trendPercent",
           utilization_actual as "utilizationActual",
           utilization_benchmark as "utilizationBenchmark",
           utilization_variance_percent as "utilizationVariancePercent",
@@ -237,12 +260,12 @@ export default async function handler(req, res) {
       return bVariance - aVariance;
     });
 
+    // Format period with actual current dates
+    const { enhancePeriodWithActualDates } = await import('./_lib/periods.js');
+    const formattedPeriod = enhancePeriodWithActualDates(period);
+
     return res.status(200).json({
-      period: {
-        id: period.id,
-        periodKey: period.period_key,
-        periodLabel: period.period_label
-      },
+      period: formattedPeriod,
       categories
     });
 

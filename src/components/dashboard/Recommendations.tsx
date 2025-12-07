@@ -196,33 +196,38 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
 
         {/* Key Metrics - Combined Card */}
         <div className="bg-white/80 backdrop-blur rounded-3xl shadow-sm p-6 lg:p-8">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-4 xl:gap-6 lg:divide-x divide-gray-200">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-4 xl:gap-6 lg:divide-x divide-gray-200">
             <div className="space-y-2">
-              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Patients</div>
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Patients Affected</div>
               <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">{selectedRec.affectedLives ? formatNumber(selectedRec.affectedLives) : 'N/A'}</div>
             </div>
             <div className="space-y-2 lg:pl-4 xl:pl-6">
-              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Risk Score</div>
-              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">1.08</div>
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Estimated Savings</div>
+              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light text-green-600">
+                {selectedRec.estimatedSavings ? formatCurrency(selectedRec.estimatedSavings) : 'N/A'}
+              </div>
             </div>
             <div className="space-y-2 lg:pl-4 xl:pl-6">
-              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Spend vs. Benchmark</div>
-              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">$1,080 / $950</div>
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Priority</div>
+              <div className={`text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light capitalize ${selectedRec.priority === 'high' ? 'text-red-600' :
+                selectedRec.priority === 'medium' ? 'text-amber-600' :
+                  'text-blue-600'
+                }`}>
+                {selectedRec.priority || 'N/A'}
+              </div>
             </div>
             <div className="space-y-2 lg:pl-4 xl:pl-6">
-              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">In Patient / 1,000</div>
-              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">58.5</div>
-            </div>
-            <div className="space-y-2 lg:pl-4 xl:pl-6">
-              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Emergency Dept / 1,000</div>
-              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light">520</div>
+              <div className="text-xs lg:text-sm text-gray-600 font-semibold uppercase tracking-wider">Complexity</div>
+              <div className="text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-light capitalize">
+                {selectedRec.implementationComplexity || 'N/A'}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Overview with Status */}
-        <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
-          <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="bg-white/60 backdrop-blur rounded-2xl p-8 shadow-sm">
+          <div className="flex items-start justify-between gap-4 mb-6">
             <h2 className="text-2xl font-light">Overview</h2>
             <div className="flex-shrink-0">
               <label className="text-sm font-medium text-gray-600 block mb-2">Status</label>
@@ -269,31 +274,66 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-            {/* Text Content - 2 columns */}
-            <div className="lg:col-span-2 space-y-4">
-              <p className="text-gray-700 leading-relaxed text-base">{selectedRec.description}</p>
-              {selectedRec.programOverview && (
-                <div className="space-y-4">
-                  {selectedRec.programOverview.split('\n\n').map((paragraph, index) => (
-                    <p key={index} className="text-gray-700 leading-relaxed text-base">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              )}
+          {/* Affected Cost Categories */}
+          {selectedRec.affectedCategories && selectedRec.affectedCategories.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-3">Affected Cost Categories</h3>
+              <div className="flex flex-wrap gap-2">
+                {selectedRec.affectedCategories.map((cat) => (
+                  <button
+                    key={cat.categoryId}
+                    className="px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-full text-sm font-medium transition-colors cursor-pointer border border-blue-200"
+                    onClick={() => setShowLinkModal(true)}
+                  >
+                    {cat.categoryName}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-10">
+            {/* Text Content - 3 columns */}
+            <div className="lg:col-span-3">
+              <div className="prose prose-lg max-w-none">
+                <p className="text-gray-700 leading-relaxed mb-5">{selectedRec.description}</p>
+                {selectedRec.programOverview && (
+                  <div className="space-y-5 mt-6">
+                    {selectedRec.programOverview.split('\n\n').map((paragraph, index) => (
+                      <p key={index} className="text-gray-700 leading-relaxed">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Image - 1 column */}
-            <div className="lg:col-span-1">
+            {/* Image - 2 columns */}
+            <div className="lg:col-span-2">
               <div className="rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 to-green-50 p-4 h-full flex items-center justify-center">
                 <img
-                  src={`/care-management-illustration.png?v=${Date.now()}`}
-                  alt="Care Management Illustration"
+                  src={`/${(() => {
+                    // Map recommendation IDs to their specific images
+                    const imageMap: Record<number, string> = {
+                      1: 'care-management-illustration.png',
+                      2: 'guide-program-illustration.png',
+                      3: 'discharge-planning-illustration.png',
+                      4: 'urgent-care-illustration.png',
+                      5: 'surgical-optimization-illustration.png',
+                      6: 'generic-drug-illustration.png'
+                    };
+                    return imageMap[selectedRec.id] || 'care-management-illustration.png';
+                  })()}?v=${Date.now()}`}
+                  alt={`${selectedRec.title} Illustration`}
                   className="w-full h-auto object-contain rounded-lg"
                   onError={(e) => {
-                    // Fallback to a placeholder if image doesn't load
-                    e.currentTarget.style.display = 'none';
+                    // Fallback to care management image if specific image doesn't load
+                    if (!e.currentTarget.src.includes('care-management-illustration.png')) {
+                      e.currentTarget.src = `/care-management-illustration.png?v=${Date.now()}`;
+                    } else {
+                      e.currentTarget.style.display = 'none';
+                    }
                   }}
                 />
               </div>
@@ -301,31 +341,6 @@ export default function Recommendations({ onBack, onNavigate: _onNavigate, initi
           </div>
         </div>
 
-        {/* Affected Cost Categories */}
-        {selectedRec.affectedCategories && selectedRec.affectedCategories.length > 0 && (
-          <div className="bg-white/60 backdrop-blur rounded-2xl p-6 shadow-sm">
-            <h2 className="text-2xl font-light mb-4">Affected Cost Categories</h2>
-            <div className="space-y-3">
-              {selectedRec.affectedCategories.map((cat) => (
-                <div
-                  key={cat.categoryId}
-                  className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => setShowLinkModal(true)}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="font-medium">{cat.categoryName}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {cat.impactAmount && (
-                      <span className="text-green-600 font-medium">{formatCurrency(cat.impactAmount)}</span>
-                    )}
-                    <ChevronRight className="w-5 h-5 text-gray-400" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Program Resources */}
         {selectedRec.programResources && (
