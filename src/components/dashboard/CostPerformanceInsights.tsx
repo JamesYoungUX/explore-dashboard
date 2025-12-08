@@ -505,7 +505,6 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onNavigate('high-cost-patients' as ProblemArea);
                           }}
                           className="text-blue-600 hover:text-blue-800 font-medium underline hover:no-underline transition-colors"
                         >
@@ -533,7 +532,6 @@ export default function CostPerformanceInsights({ onNavigate }: Props) {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onNavigate('high-cost-patients' as ProblemArea);
                           }}
                           className="text-blue-600 hover:text-blue-800 font-medium underline hover:no-underline transition-colors"
                         >
